@@ -1,35 +1,53 @@
-import React, { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { mockLogin } from '../../services/mockAuth';
-import { FiZap, FiCheck, FiArrowRight } from 'react-icons/fi';
-import { motion } from 'framer-motion';
-import '../../styles/Login.css';
+import { useEffect, useState } from 'react'
+import { FiZap, FiCheck, FiArrowRight } from 'react-icons/fi'
+import { motion } from 'framer-motion'
+import api from '../../services/api'
+import '../../styles/Login.css'
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { login, user } = useAuth();
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [apiStatus, setApiStatus] = useState('Mengecek koneksi API...')
 
-  if (user) return <Navigate to="/dashboard" replace />;
+  useEffect(() => {
+    const checkApiConnection = async () => {
+      try {
+        const response = await api.get('/health')
+        if (response?.data?.status === 'OK') {
+          setApiStatus('API terhubung')
+          return
+        }
+
+        setApiStatus('API merespons, tetapi status tidak sesuai')
+      } catch {
+        setApiStatus('API belum terhubung')
+      }
+    }
+
+    checkApiConnection()
+  }, [])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
     try {
-      const userData = await mockLogin(username, password);
-      login(userData);
-      navigate('/dashboard');
+      if (!username || !password) {
+        throw new Error('Username dan password wajib diisi')
+      }
+
+      const response = await api.get('/health')
+      if (response?.data?.status !== 'OK') {
+        throw new Error('API belum siap. Jalankan backend terlebih dahulu')
+      }
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="login-page">
@@ -87,11 +105,11 @@ const Login = () => {
 
         <div className="login-footer">
           <FiCheck className="icon-sm login-footer-icon" />
-          Server terhubung dengan aman.
+          {apiStatus}
         </div>
       </motion.div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
