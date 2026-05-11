@@ -1,41 +1,29 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useContext, useEffect } from 'react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
-const THEME_STORAGE_KEY = 'taskteam-theme'
-const ThemeContext = createContext(null)
+// Using 'v2' key so existing users with 'light' saved get a fresh start with dark default
+const THEME_KEY = 'taskteam_theme_v2';
 
-function getInitialTheme() {
-  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
-  return storedTheme === 'light' ? 'light' : 'dark'
-}
+const ThemeContext = createContext();
 
-export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(getInitialTheme)
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useLocalStorage(THEME_KEY, 'dark');
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem(THEME_STORAGE_KEY, theme)
-  }, [theme])
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+  }, [theme]);
 
-  const toggleTheme = useCallback(() => {
-    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))
-  }, [])
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
-  const value = useMemo(
-    () => ({
-      theme,
-      toggleTheme,
-    }),
-    [theme, toggleTheme],
-  )
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-}
-
-export function useTheme() {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useTheme harus dipakai di dalam ThemeProvider.')
-  }
-
-  return context
-}
+export const useTheme = () => useContext(ThemeContext);
