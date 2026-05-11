@@ -1,376 +1,405 @@
-/* Dashboard Page */
+/* ==========================================
+   Dashboard Page & Components Styles
+   ========================================== */
+
 .dashboard-page {
-  padding: 2rem 1.5rem;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.dashboard-greeting {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #000000;
-  margin: 0 0 0.5rem 0;
-}
-
-.dashboard-greeting-sub {
-  font-size: 0.95rem;
-  color: #333333;
-  margin: 0 0 2rem 0;
-}
-
-.dashboard-banner {
-  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 /* Bento Grid Layouts */
-.bento-grid-admin,
+.bento-grid-admin {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
 .bento-grid-manager {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: auto;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.bento-col-span-2 {
-  grid-column: span 2;
-}
-
-.bento-col-span-4 {
-  grid-column: span 4;
-}
-
-.bento-row-span-2 {
-  grid-row: span 2;
-}
-
-/* Bento Cards */
-.bento-card,
-.bento-card-accent,
-.bento-card-large {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(71, 85, 105, 0.3);
-  border-radius: 1.25rem;
-  padding: 1.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.bento-card:hover,
-.bento-card-accent:hover {
-  border-color: rgba(71, 85, 105, 0.6);
-  transform: translateY(-2px);
-}
-
-.bento-card-accent {
-  background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
-}
-
-.bento-card-large {
-  grid-column: span 4;
-}
-
-.bento-glow {
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-/* Stat Cards */
-.stat-card-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary, #cbd5e1);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0 0 0.75rem 0;
-}
-
-.stat-card-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--accent-blue, #3b82f6);
-  line-height: 1;
-  margin: 0.5rem 0;
-}
-
-.stat-card-sub {
-  font-size: 0.8rem;
-  color: var(--text-secondary, #64748b);
-  margin: 0.5rem 0 0 0;
-}
-
-/* Ring Card */
-.ring-card-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
-.ring-container {
-  position: relative;
-  width: 160px;
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+@media (min-width: 768px) {
+  .bento-grid-admin {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, auto);
+    min-height: 600px;
+  }
 
-.ring-number {
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--text-primary, #f1f5f9);
-  position: absolute;
-  z-index: 2;
-}
-
-.ring-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary, #cbd5e1);
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, calc(-50% + 2rem));
-}
-
-.ring-svg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.ring-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-primary, #f1f5f9);
-  margin: 0;
-}
-
-.ring-subtitle {
-  font-size: 0.875rem;
-  color: var(--text-secondary, #64748b);
-  margin: 0;
-}
-
-/* Progress Section */
-.progress-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.progress-item-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--text-primary, #e2e8f0);
-}
-
-.progress-item-count {
-  font-weight: 600;
-  color: var(--accent-blue, #3b82f6);
-}
-
-.progress-track {
-  width: 100%;
-  height: 6px;
-  background: rgba(71, 85, 105, 0.3);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-fill-green {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #059669);
-  border-radius: 3px;
-}
-
-.progress-fill-orange {
-  height: 100%;
-  background: linear-gradient(90deg, #f97316, #ea580c);
-  border-radius: 3px;
-}
-
-.progress-fill-muted {
-  height: 100%;
-  background: rgba(100, 116, 139, 0.5);
-  border-radius: 3px;
-}
-
-/* Activity Feed */
-.activity-feed-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-primary, #f1f5f9);
-  margin-bottom: 1.5rem;
-}
-
-.activity-feed-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.activity-feed-item {
-  display: flex;
-  gap: 1rem;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  transition: background 0.2s ease;
-}
-
-.activity-feed-item:hover {
-  background: rgba(71, 85, 105, 0.2);
-}
-
-.activity-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent-blue, #3b82f6);
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 0.4rem;
-}
-
-.activity-text {
-  flex: 1;
-  font-size: 0.875rem;
-  color: var(--text-secondary, #cbd5e1);
-  margin: 0;
-}
-
-.activity-actor {
-  font-weight: 600;
-  color: var(--text-primary, #f1f5f9);
-}
-
-.activity-action {
-  color: var(--text-secondary, #94a3b8);
-}
-
-.activity-target {
-  font-weight: 500;
-  color: var(--accent-blue, #3b82f6);
-}
-
-.activity-time {
-  font-size: 0.75rem;
-  color: var(--text-secondary, #64748b);
-  white-space: nowrap;
-}
-
-/* Deadline Items */
-.deadline-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  border-bottom: 1px solid rgba(71, 85, 105, 0.2);
-  font-size: 0.875rem;
-}
-
-.deadline-item:last-child {
-  border-bottom: none;
-}
-
-.deadline-title {
-  flex: 1;
-  color: var(--text-primary, #f1f5f9);
-  font-weight: 500;
-}
-
-.deadline-date {
-  color: var(--text-secondary, #94a3b8);
-  white-space: nowrap;
-  margin-left: 1rem;
-}
-
-/* Responsive */
-@media (max-width: 1400px) {
-  .bento-grid-admin,
   .bento-grid-manager {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, auto);
+    min-height: 600px;
   }
 
   .bento-col-span-2 {
     grid-column: span 2;
   }
 
+  .bento-row-span-2 {
+    grid-row: span 2;
+  }
+
   .bento-col-span-4 {
-    grid-column: span 3;
-  }
-
-  .bento-card-large {
-    grid-column: span 3;
+    grid-column: span 4;
   }
 }
 
-@media (max-width: 768px) {
-  .bento-grid-admin,
-  .bento-grid-manager {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .bento-col-span-2,
-  .bento-col-span-4,
-  .bento-row-span-2,
-  .bento-card-large {
-    grid-column: span 2;
-  }
-
-  .dashboard-greeting {
-    font-size: 1.5rem;
-  }
-
-  .stat-card-value {
-    font-size: 2rem;
-  }
-
-  .ring-number {
-    font-size: 2rem;
-  }
-
-  .ring-container {
-    width: 120px;
-    height: 120px;
-  }
+/* Bento Cards */
+.bento-card {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-@media (max-width: 640px) {
-  .bento-grid-admin,
-  .bento-grid-manager {
-    grid-template-columns: 1fr;
-  }
+.bento-card:hover {
+  box-shadow: var(--shadow-neumorph);
+  transform: translateY(-2px);
+}
 
-  .bento-col-span-2,
-  .bento-col-span-4,
-  .bento-row-span-2,
-  .bento-card-large {
-    grid-column: 1;
-    grid-row: auto;
-  }
+.bento-card-large {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: background-color 0.3s;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
 
-  .dashboard-page {
-    padding: 1rem;
-  }
+.bento-card-accent {
+  background: linear-gradient(135deg, var(--bg-card), var(--accent-blue-bg));
+  border-color: rgba(47, 129, 247, 0.2);
+}
 
-  .dashboard-greeting {
-    font-size: 1.25rem;
-  }
+/* ==========================================
+   Light-mode card overrides (targeted only)
+   ========================================== */
+html:not(.dark) .bento-card {
+  /* Crisper shadow so cards "lift" from the warm background */
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+  border-color: #e4e9f0;
+}
+
+html:not(.dark) .bento-card:hover {
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.06),
+    0 8px 20px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+html:not(.dark) .bento-card-large {
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+  border-color: #e4e9f0;
+}
+
+/* Accent card: use soft indigo-slate instead of electric blue gradient */
+html:not(.dark) .bento-card-accent {
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  border-color: #c7d2fe;  /* indigo-200 */
+}
+
+/* Glow: reduce opacity on light to keep it subtle */
+html:not(.dark) .bento-glow {
+  opacity: 0.05;
+  background-color: #6366f1; /* indigo instead of blue */
+}
+
+/* Deadline row: slightly warmer background so it doesn't vanish */
+html:not(.dark) .deadline-item {
+  background-color: #f8fafc;
+  border-color: #e4e9f0;
+}
+
+/* Activity feed left border: softer indigo accent */
+html:not(.dark) .activity-feed-item {
+  border-left-color: #c7d2fe;
+}
+
+html:not(.dark) .activity-dot {
+  background-color: #6366f1;
+}
+
+/* Progress track: slightly deeper so the fill contrasts well */
+html:not(.dark) .progress-track {
+  background-color: #e9ecf2;
+  border-color: #d9dfe8;
+}
+
+
+/* Stat Cards */
+.stat-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.stat-card-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--text-heading);
+}
+
+.stat-card-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Completion Ring Card */
+.ring-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ring-container {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 9999px;
+  border-width: 4px;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  border-color: var(--border-color);
+  background-color: rgba(var(--bg-main), 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.ring-number {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.ring-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  color: var(--text-secondary);
+}
+
+.ring-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.ring-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+/* Bento Glow Accent */
+.bento-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12rem;
+  height: 12rem;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.1;
+  pointer-events: none;
+  background-color: var(--accent-blue);
+}
+
+/* Progress bars (Manager) */
+.progress-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.progress-item-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-heading);
+}
+
+.progress-item-count {
+  color: var(--text-secondary);
+}
+
+.progress-track {
+  width: 100%;
+  height: 0.625rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-hover);
+}
+
+.progress-fill-green {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--status-green);
+}
+
+.progress-fill-orange {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--status-orange);
+}
+
+.progress-fill-muted {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--text-secondary);
+}
+
+/* Deadline List */
+.deadline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--bg-main);
+}
+
+.deadline-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.deadline-date {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: var(--status-red);
+  background-color: var(--status-red-bg);
+}
+
+/* Activity Feed */
+.activity-feed-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-heading);
+}
+
+.activity-feed-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-feed-item {
+  position: relative;
+  padding-left: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-left: 2px solid var(--border-color);
+}
+
+.activity-dot {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  left: -5px;
+  top: 0.75rem;
+  background-color: var(--accent-blue);
+}
+
+.activity-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.activity-actor {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.activity-action {
+  color: var(--text-secondary);
+}
+
+.activity-target {
+  font-weight: 500;
+  color: var(--text-heading);
+}
+
+.activity-time {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+  color: var(--text-secondary);
+}
+
+/* Dashboard Banner */
+.dashboard-banner {
+  margin-bottom: 2rem;
+}
+
+.dashboard-greeting {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.25rem;
+  color: var(--text-heading);
+}
+
+.dashboard-greeting-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
