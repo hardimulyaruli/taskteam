@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { mockLogin } from '../../services/mockAuth';
+import { useAuth } from '../../../context/AuthContext';
 import { FiZap, FiCheck, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import '../../styles/Login.css';
+import '../../../styles/Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -21,11 +20,10 @@ const Login = () => {
     setError('');
     setIsLoading(true);
     try {
-      const userData = await mockLogin(username, password);
-      login(userData);
+      await login(username, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || 'Login gagal.');
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +67,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input-field"
-              placeholder="Gunakan: role123"
+              placeholder="admin123 / manager123 / team123"
             />
           </div>
           {error && <p className="login-error">{error}</p>}
