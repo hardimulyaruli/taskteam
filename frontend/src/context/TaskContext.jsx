@@ -1,58 +1,37 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { getDashboardOverview } from '../services/dashboard'
-import { useAuth } from './AuthContext'
+import React, { createContext, useContext } from 'react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
-const TaskContext = createContext(null)
+const UserContext = createContext();
 
-export function TaskProvider({ children }) {
-  const { token } = useAuth()
-  const [tasks, setTasks] = useState([])
-  const [users, setUsers] = useState([])
-  const [activities, setActivities] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+const initialUsers = [
+  { id: 1, name: 'Admin Utama', username: 'admin', role: 'admin', status: 'Aktif' },
+  { id: 2, name: 'Bapak Manager', username: 'manager', role: 'manager', status: 'Aktif' },
+  { id: 3, name: 'Anggota Tim 1', username: 'team', role: 'team', status: 'Aktif' },
+  { id: 4, name: 'Anggota Tim 2', username: 'hanif', role: 'team', status: 'Nonaktif' },
+  { id: 5, name: 'Anggota Tim 3', username: 'veliana', role: 'team', status: 'Aktif' },
+];
 
-  const refreshDashboardData = useCallback(async () => {
-    if (!token) {
-      setTasks([])
-      setUsers([])
-      setActivities([])
-      return
-    }
+export const UserProvider = ({ children }) => {
+  const [users, setUsers] = useLocalStorage('taskteam_users', initialUsers);
 
-    setIsLoading(true)
-    try {
-      const response = await getDashboardOverview()
-      setTasks(response.data?.tasks ?? [])
-      setUsers(response.data?.users ?? [])
-      setActivities(response.data?.activities ?? [])
-    } finally {
-      setIsLoading(false)
-    }
-  }, [token])
+  const addUser = (newUser) => {
+    const id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+    setUsers([...users, { ...newUser, id }]);
+  };
 
-  useEffect(() => {
-    refreshDashboardData()
-  }, [refreshDashboardData])
+  const updateUser = (id, updatedData) => {
+    setUsers(users.map(u => u.id === id ? { ...u, ...updatedData } : u));
+  };
 
-  const value = useMemo(
-    () => ({
-      tasks,
-      users,
-      activities,
-      isLoading,
-      refreshDashboardData,
-    }),
-    [tasks, users, activities, isLoading, refreshDashboardData],
-  )
+  const deleteUser = (id) => {
+    setUsers(users.filter(u => u.id !== id));
+  };
 
-  return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>
-}
+  return (
+    <UserContext.Provider value={{ users, addUser, updateUser, deleteUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
 
-export function useTasks() {
-  const context = useContext(TaskContext)
-  if (!context) {
-    throw new Error('useTasks harus dipakai di dalam TaskProvider.')
-  }
-
-  return context
-}
+export const useUsers = () => useContext(UserContext);
