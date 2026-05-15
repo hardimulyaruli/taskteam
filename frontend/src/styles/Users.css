@@ -1,0 +1,175 @@
+/* ==========================================
+   Users Page & Components Styles
+   ========================================== */
+
+.users-page {
+  padding-bottom: 2.5rem;
+}
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.table-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+.data-table {
+  width: 100%;
+  text-align: left;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.table-head {
+  background-color: var(--bg-main);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-th {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.table-th-right {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.table-tbody {
+  border-top: none;
+}
+
+.table-row {
+  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background-color: color-mix(in srgb, var(--bg-hover) 50%, transparent);
+}
+
+.table-td {
+  padding: 1rem 1.25rem;
+  color: var(--text-primary);
+}
+
+.table-td-muted {
+  padding: 1rem 1.25rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.table-td-right {
+  padding: 1rem 1.25rem;
+  text-align: right;
+}
+
+.td-primary {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.td-secondary {
+  color: var(--text-secondary);
+}
+
+.badge-active {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: var(--status-green-bg);
+  color: var(--status-green);
+  border: 1px solid rgba(63, 185, 80, 0.2);
+}
+
+.badge-inactive {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background-color: var(--bg-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.table-empty-row {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.action-btn-danger {
+  padding: 0.25rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.action-btn-danger:hover {
+  color: var(--status-red);
+}
+
+.action-btn-danger:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   Light-mode users overrides (targeted only)
+   ========================================== */
+html:not(.dark) .table-card {
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+  border-color: #e4e9f0;
+}
+
+html:not(.dark) .table-head {
+  background-color: #f4f6f9;
+  border-bottom-color: #e4e9f0;
+}
+
+html:not(.dark) .table-row:hover {
+  background-color: #f8fafc;
+}
+
+html:not(.dark) .badge-active {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-color: rgba(21, 128, 61, 0.2);
+}
+
+html:not(.dark) .badge-inactive {
+  background-color: #f4f6f9;
+  color: #64748b;
+  border-color: #dde2ea;
+}
+

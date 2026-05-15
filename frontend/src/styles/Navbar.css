@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@layer components {
+  .navbar-container {
+    @apply sticky top-0 z-50 w-full transition-all duration-300;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .navbar-inner {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between;
+  }
+
+  .navbar-logo-text {
+    @apply text-xl font-bold tracking-tight;
+    color: var(--text-heading);
+  }
+
+  .navbar-nav {
+    @apply hidden md:flex items-center gap-1;
+  }
+
+  .navbar-nav-item {
+    @apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-200;
+    color: var(--text-secondary);
+  }
+
+  .navbar-nav-item:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+  }
+
+  .navbar-nav-item.active {
+    color: var(--accent-blue);
+    background-color: var(--accent-blue-bg);
+  }
+
+  /* Profile Dropdown Styles */
+  .profile-dropdown-btn {
+    @apply flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-full border transition-all duration-200;
+    border-color: var(--border-color);
+    background-color: var(--bg-card);
+  }
+
+  .profile-dropdown-btn:hover {
+    border-color: var(--text-secondary);
+    background-color: var(--bg-hover);
+  }
+
+  .profile-dropdown-menu {
+    @apply absolute right-0 mt-2 w-48 rounded-xl shadow-[var(--shadow-neumorph)] overflow-hidden transition-all duration-200 transform origin-top-right;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+  }
+
+  .profile-dropdown-item {
+    @apply flex items-center gap-2 px-4 py-2.5 text-sm w-full text-left transition-colors;
+    color: var(--text-primary);
+  }
+
+  .profile-dropdown-item:hover {
+    background-color: var(--bg-hover);
+  }
+}
