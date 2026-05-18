@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { FiZap, FiCheck, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import '../../../styles/Login.css';
+import '../../styles/Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
