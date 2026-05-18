@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import DashboardLayout from './components/layout/DashboardLayout'
-import Login from './features/Auth/Components/Login'
+import Login from './features/Auth/Login'
 import Dashboard from './features/dashboard/Dashboard'
 
 const PlaceholderPage = ({ title }) => (
