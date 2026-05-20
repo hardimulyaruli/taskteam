@@ -1,20 +1,37 @@
-import { createContext, useContext, useMemo } from 'react'
-import { useTasks } from './TaskContext'
+import React, { createContext, useContext } from 'react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
-const UserContext = createContext(null)
+const UserContext = createContext();
 
-export function UserProvider({ children }) {
-  const { users } = useTasks()
-  const value = useMemo(() => ({ users }), [users])
+const initialUsers = [
+  { id: 1, name: 'Admin Utama', username: 'admin', role: 'admin', status: 'Aktif' },
+  { id: 2, name: 'Manager', username: 'manager', role: 'manager', status: 'Aktif' },
+  { id: 3, name: 'Anggota Tim 1', username: 'team', role: 'team', status: 'Aktif' },
+  { id: 4, name: 'Anggota Tim 2', username: 'hanif', role: 'team', status: 'Nonaktif' },
+  { id: 5, name: 'Anggota Tim 3', username: 'veliana', role: 'team', status: 'Aktif' },
+];
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
-}
+export const UserProvider = ({ children }) => {
+  const [users, setUsers] = useLocalStorage('taskteam_users', initialUsers);
 
-export function useUsers() {
-  const context = useContext(UserContext)
-  if (!context) {
-    throw new Error('useUsers harus dipakai di dalam UserProvider.')
-  }
+  const addUser = (newUser) => {
+    const id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+    setUsers([...users, { ...newUser, id }]);
+  };
 
-  return context
-}
+  const updateUser = (id, updatedData) => {
+    setUsers(users.map(u => u.id === id ? { ...u, ...updatedData } : u));
+  };
+
+  const deleteUser = (id) => {
+    setUsers(users.filter(u => u.id !== id));
+  };
+
+  return (
+    <UserContext.Provider value={{ users, addUser, updateUser, deleteUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export const useUsers = () => useContext(UserContext);
