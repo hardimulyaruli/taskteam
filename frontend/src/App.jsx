@@ -4,13 +4,8 @@ import Login from './features/Auth/Login'
 import Dashboard from './features/dashboard/Dashboard'
 import Tasks from './features/Tasks/Tasks'
 import UsersPage from './features/Users/pages/UsersPage'
-
-const PlaceholderPage = ({ title }) => (
-  <div className="dashboard-page">
-    <h1 className="dashboard-greeting">{title}</h1>
-    <p className="dashboard-greeting-sub">Halaman ini belum diimplementasikan.</p>
-  </div>
-)
+import AboutPage from './features/About/pages/AboutPage'
+import ProfilePage from './features/Profile/pages/ProfilePage'
 
 function App() {
   return (
@@ -21,8 +16,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/users" element={<UsersPage />} />
-        <Route path="/about" element={<PlaceholderPage title="About Us" />} />
-        <Route path="/profile" element={<PlaceholderPage title="Profil Pribadi" />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
