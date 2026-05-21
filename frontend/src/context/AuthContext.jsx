@@ -13,10 +13,15 @@ function getInitialAuth() {
 
   try {
     const parsed = JSON.parse(rawValue)
-    return {
-      user: parsed.user ?? null,
-      token: parsed.token ?? null,
+    const user = parsed.user ?? null
+    const token = parsed.token ?? null
+
+    // Set header synchronously so it's available before any child effects run
+    if (token) {
+      api.defaults.headers.common.Authorization = `Bearer ${token}`
     }
+
+    return { user, token }
   } catch {
     return { user: null, token: null }
   }
@@ -25,22 +30,16 @@ function getInitialAuth() {
 export function AuthProvider({ children }) {
   const [{ user, token }, setAuthState] = useState(getInitialAuth)
 
-  useEffect(() => {
-    if (token) {
-      api.defaults.headers.common.Authorization = `Bearer ${token}`
-    } else {
-      delete api.defaults.headers.common.Authorization
-    }
-  }, [token])
-
   const setAuth = useCallback((nextUser, nextToken) => {
     setAuthState({ user: nextUser, token: nextToken })
 
     if (nextToken) {
+      api.defaults.headers.common.Authorization = `Bearer ${nextToken}`
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ user: nextUser, token: nextToken }))
       return
     }
 
+    delete api.defaults.headers.common.Authorization
     localStorage.removeItem(AUTH_STORAGE_KEY)
   }, [])
 

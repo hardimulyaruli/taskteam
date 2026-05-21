@@ -14,7 +14,10 @@ const Tasks = () => {
   const scrollRef = useRef(null);
 
   const displayTasks = user.role === 'team' 
-    ? tasks.filter(t => t.assignee === user.username || t.assignee === 'team')
+    ? tasks.filter(t => {
+        const assignees = String(t.assignee || '').split(',').map(s => s.trim());
+        return assignees.includes(user.username) || assignees.includes('team');
+      })
     : tasks;
 
   const columns = [
@@ -23,13 +26,23 @@ const Tasks = () => {
     { id: 'Selesai', title: 'Selesai', color: 'var(--status-green)' }
   ];
 
-  const handleAddSubmit = (formData) => {
-    addTask(formData);
-    setShowModal(false);
+  const handleAddSubmit = async (formData) => {
+    try {
+      await addTask(formData);
+      setShowModal(false);
+    } catch (err) {
+      console.error('Gagal menambah tugas:', err);
+      alert('Gagal menambah tugas. Silakan coba lagi.');
+    }
   };
 
-  const updateTaskStatus = (id, newStatus) => {
-    updateTask(id, { status: newStatus });
+  const updateTaskStatus = async (id, newStatus) => {
+    try {
+      await updateTask(id, { status: newStatus });
+    } catch (err) {
+      console.error('Gagal mengubah status:', err);
+      alert('Gagal mengubah status tugas.');
+    }
   };
 
   return (

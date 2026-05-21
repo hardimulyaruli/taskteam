@@ -35,8 +35,31 @@ async function query(sql, params = []) {
   return rows;
 }
 
+/**
+ * Run multiple queries inside a single transaction.
+ * Usage: await transaction(async (conn) => { await conn.execute(...); });
+ * Automatically commits on success, rolls back on error.
+ */
+async function transaction(callback) {
+  const dbPool = getPool();
+  const conn = await dbPool.getConnection();
+
+  try {
+    await conn.beginTransaction();
+    const result = await callback(conn);
+    await conn.commit();
+    return result;
+  } catch (error) {
+    await conn.rollback();
+    throw error;
+  } finally {
+    conn.release();
+  }
+}
+
 module.exports = {
   connectDatabase,
   getPool,
   query,
+  transaction,
 };

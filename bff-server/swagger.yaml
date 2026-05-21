@@ -38,6 +38,163 @@ paths:
           description: Dashboard overview
         '401':
           description: Unauthorized
+
+  /tasks:
+    get:
+      summary: List all tasks
+      description: Returns all tasks. Team members only see tasks assigned to them.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Array of tasks
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create a new task
+      description: Only managers can create tasks.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                  maxLength: 2000
+                assignee:
+                  type: string
+                  description: Username of the assignee
+                deadline:
+                  type: string
+                  format: date
+                priority:
+                  type: string
+                  enum: [Rendah, Sedang, Tinggi]
+                status:
+                  type: string
+                  enum: [To Do, Dikerjakan, Selesai]
+      responses:
+        '201':
+          description: Task created
+        '400':
+          description: Validation error
+        '403':
+          description: Forbidden
+
+  /tasks/{id}:
+    get:
+      summary: Get task detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task detail
+        '404':
+          description: Not found
+    put:
+      summary: Update task (full)
+      description: Only managers can update tasks fully.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                assignee:
+                  type: string
+                deadline:
+                  type: string
+                  format: date
+                priority:
+                  type: string
+                  enum: [Rendah, Sedang, Tinggi]
+                status:
+                  type: string
+                  enum: [To Do, Dikerjakan, Selesai]
+      responses:
+        '200':
+          description: Task updated
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    delete:
+      summary: Soft-delete a task
+      description: Only managers can delete tasks.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task deleted
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+
+  /tasks/{id}/status:
+    patch:
+      summary: Update task status only
+      description: Team members and managers can update status. Team members can only update tasks assigned to them.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [To Do, Dikerjakan, Selesai]
+      responses:
+        '200':
+          description: Status updated
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+
 components:
   securitySchemes:
     bearerAuth:
