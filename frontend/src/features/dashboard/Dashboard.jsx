@@ -7,7 +7,6 @@ import TeamDashboard from './pages/TeamDashboard';
 const Dashboard = () => {
   const { user } = useAuth();
 
-  // Switch based on user role to render different context components
   if (user?.role === 'admin') {
     return <AdminDashboard user={user} />;
   }
@@ -20,7 +19,6 @@ const Dashboard = () => {
     return <TeamDashboard user={user} />;
   }
 
-  // Fallback just in case
   return (
     <div className="text-white p-8">
       <h1>Dashboard (No specific role detected)</h1>

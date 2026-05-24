@@ -134,53 +134,18 @@ html:not(.dark) .progress-track {
 }
 
 /* Light-mode overrides untuk komponen tt- */
-html:not(.dark) .tt-donut-pct {
-  color: #1e293b;
-}
-
-html:not(.dark) .tt-donut-label {
-  color: #64748b;
-}
-
-html:not(.dark) .tt-legend-item {
-  color: #475569;
-}
-
-html:not(.dark) .tt-legend-val {
-  color: #1e293b;
-}
-
-html:not(.dark) .tt-progress-header {
-  color: #64748b;
-}
-
-html:not(.dark) .tt-progress-track {
-  background: #e9ecf2;
-}
-
-html:not(.dark) .tt-activity-row {
-  border-bottom-color: #e4e9f0;
-}
-
-html:not(.dark) .tt-act-title {
-  color: #1e293b;
-}
-
-html:not(.dark) .tt-act-sub {
-  color: #94a3b8;
-}
-
-html:not(.dark) .tt-week-day {
-  color: #94a3b8;
-}
-
-html:not(.dark) .tt-empty {
-  color: #94a3b8;
-}
-
-html:not(.dark) .tt-week-count {
-  color: #16a34a;
-}
+html:not(.dark) .tt-donut-pct    { color: #1e293b; }
+html:not(.dark) .tt-donut-label  { color: #64748b; }
+html:not(.dark) .tt-legend-item  { color: #475569; }
+html:not(.dark) .tt-legend-val   { color: #1e293b; }
+html:not(.dark) .tt-progress-header { color: #64748b; }
+html:not(.dark) .tt-progress-track  { background: #e9ecf2; }
+html:not(.dark) .tt-activity-row    { border-bottom-color: #e4e9f0; }
+html:not(.dark) .tt-act-title       { color: #1e293b; }
+html:not(.dark) .tt-act-sub         { color: #94a3b8; }
+html:not(.dark) .tt-week-day        { color: #94a3b8; }
+html:not(.dark) .tt-empty           { color: #94a3b8; }
+html:not(.dark) .tt-week-count      { color: #16a34a; }
 
 /* ==========================================
    Stat Cards
@@ -286,7 +251,7 @@ html:not(.dark) .tt-week-count {
 }
 
 /* ==========================================
-   Progress bars (Manager)
+   Progress bars
    ========================================== */
 .progress-section {
   flex: 1;
@@ -337,9 +302,23 @@ html:not(.dark) .tt-week-count {
   background-color: var(--text-secondary);
 }
 
+.progress-fill-red {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--status-red);
+}
+
 /* ==========================================
    Deadline List
    ========================================== */
+.deadline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
 .deadline-item {
   display: flex;
   justify-content: space-between;
@@ -524,7 +503,7 @@ html:not(.dark) .tt-week-count {
 }
 
 /* ==========================================
-   TeamDashboard — Progress Bars
+   TeamDashboard — Progress Bars (tt-)
    ========================================== */
 .tt-progress-section {
   display: flex;
@@ -695,3 +674,105 @@ html:not(.dark) .tt-status-to-do      { background: #fee2e2; color: #dc2626; }
   color: var(--text-secondary);
   padding: 8px 0;
 }
+
+/* ==========================================
+   Deadline Badge
+   ========================================== */
+.dl-badge {
+  font-size: 0.7rem;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dl-overdue { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+.dl-soon    { background: rgba(245, 158, 11, 0.15);  color: #f59e0b; }
+.dl-ok      { background: rgba(74, 222, 128, 0.15);  color: #4ade80; }
+
+html:not(.dark) .dl-overdue { background: #fee2e2; color: #dc2626; }
+html:not(.dark) .dl-soon    { background: #fef3c7; color: #d97706; }
+html:not(.dark) .dl-ok      { background: #dcfce7; color: #16a34a; }
+
+/* ==========================================
+   Manager Dashboard — Top Assignee Card
+   ========================================== */
+.mgr-badge-new {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+html:not(.dark) .mgr-badge-new {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.mgr-assignee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.mgr-assignee-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mgr-assignee-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.mgr-assignee-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mgr-assignee-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mgr-assignee-sub {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.mgr-assignee-bar-track {
+  height: 5px;
+  background: var(--bg-hover);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.mgr-assignee-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  opacity: 0.85;
+}
+
+html:not(.dark) .mgr-assignee-name      { color: #1e293b; }
+html:not(.dark) .mgr-assignee-sub       { color: #94a3b8; }
+html:not(.dark) .mgr-assignee-bar-track { background: #e9ecf2; }
