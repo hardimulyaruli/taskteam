@@ -61,7 +61,6 @@ export function TaskProvider({ children }) {
   }, [refreshTasks])
 
   const updateTask = useCallback(async (id, data) => {
-    // If only status is being updated, use the dedicated endpoint
     if (data.status && Object.keys(data).length === 1) {
       try {
         await taskApi.updateTaskStatus(id, data.status)

@@ -22,8 +22,13 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete }) => {
         <span className={`task-priority-badge ${getPriorityClass(task.priority)}`}>
           {task.priority}
         </span>
+
         {userRole === 'manager' && (
-          <button onClick={() => onDelete(task.id)} className="action-btn-danger">
+          <button
+            onClick={() => onDelete(task.id)}
+            className="action-btn-danger"
+            title="Hapus tugas"
+          >
             <FiTrash2 />
           </button>
         )}
@@ -36,6 +41,7 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete }) => {
         <div className="task-meta-item">
           <FiUser /> <span>{task.assignee}</span>
         </div>
+
         <div className="task-deadline">
           <FiClock /> <span>{task.deadline}</span>
         </div>
