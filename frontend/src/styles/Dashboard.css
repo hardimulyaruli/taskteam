@@ -776,3 +776,49 @@ html:not(.dark) .mgr-badge-new {
 html:not(.dark) .mgr-assignee-name      { color: #1e293b; }
 html:not(.dark) .mgr-assignee-sub       { color: #94a3b8; }
 html:not(.dark) .mgr-assignee-bar-track { background: #e9ecf2; }
+
+/* ==========================================
+   Manager Dashboard — Export Button & Layout
+   ========================================== */
+.dashboard-banner-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.dashboard-banner-row .dashboard-banner {
+  margin-bottom: 0;
+}
+
+.mgr-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: #6366f1;
+  color: #fff;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.mgr-export-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.mgr-export-btn:active {
+  transform: translateY(0);
+}
+
+html:not(.dark) .mgr-export-btn {
+  background: #6366f1;
+  color: #fff;
+}

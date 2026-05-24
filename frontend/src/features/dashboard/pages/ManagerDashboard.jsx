@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import DashboardBanner from '../components/DashboardBanner';
 import StatCard from '../components/StatCard';
 import RecentActivities from '../components/RecentActivities';
+import ExportPDF from '../components/ExportPDF';
 import { useTasks } from '../../../context/TaskContext';
 import '../../../styles/Dashboard.css';
 
@@ -124,65 +125,10 @@ const WeeklyChart = ({ tasks }) => {
 };
 
 // ============================================
-// TOP ASSIGNEE
-// ============================================
-const TopAssignee = ({ tasks }) => {
-  const map = {};
-  tasks.forEach(t => {
-    if (t.status !== 'Selesai') return;
-    const name = t.assignedTo || t.assignee || t.member || 'Unknown';
-    map[name] = (map[name] || 0) + 1;
-  });
-
-  const list = Object.entries(map)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
-
-  const max = list[0]?.[1] || 1;
-
-  const getInitials = (name) =>
-    name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-
-  const avatarColors = ['#6366f1', '#f59e0b', '#10b981'];
-
-  return (
-    <div className="mgr-assignee-list">
-      {list.length === 0 ? (
-        <p className="tt-empty">Belum ada tugas selesai.</p>
-      ) : (
-        list.map(([name, count], i) => (
-          <div key={name} className="mgr-assignee-row">
-            <div
-              className="mgr-assignee-avatar"
-              style={{ background: avatarColors[i % avatarColors.length] }}
-            >
-              {getInitials(name)}
-            </div>
-            <div className="mgr-assignee-body">
-              <div className="mgr-assignee-name">{name}</div>
-              <div className="mgr-assignee-sub">{count} tugas selesai</div>
-              <div className="mgr-assignee-bar-track">
-                <motion.div
-                  className="mgr-assignee-bar-fill"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.round((count / max) * 100)}%` }}
-                  transition={{ duration: 0.8, delay: i * 0.1, ease: 'easeOut' }}
-                  style={{ background: avatarColors[i % avatarColors.length] }}
-                />
-              </div>
-            </div>
-          </div>
-        ))
-      )}
-    </div>
-  );
-};
-
-// ============================================
 // MAIN COMPONENT
 // ============================================
 const ManagerDashboard = ({ user }) => {
-  const { tasks } = useTasks();
+  const { tasks, users } = useTasks();
   const today = new Date();
 
   const overdueTasks = tasks.filter(
@@ -213,7 +159,12 @@ const ManagerDashboard = ({ user }) => {
 
   return (
     <div className="dashboard-page">
-      <DashboardBanner user={user} />
+
+      {/* BANNER + EXPORT BUTTON */}
+      <div className="dashboard-banner-row">
+        <DashboardBanner user={user} />
+        <ExportPDF tasks={tasks} users={users} stats={stats} user={user} />
+      </div>
 
       <div className="bento-grid-manager">
 
@@ -287,21 +238,7 @@ const ManagerDashboard = ({ user }) => {
           </div>
         </motion.div>
 
-        {/* CARD 5 — Top Assignee (2 col) */}
-        <motion.div
-          initial={{ opacity: 0, x: -16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.35 }}
-          className="bento-card bento-col-span-2"
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem' }}>
-            <h3 className="stat-card-label" style={{ marginBottom: 0 }}>Top Assignee Minggu Ini</h3>
-            <span className="mgr-badge-new">BARU</span>
-          </div>
-          <TopAssignee tasks={tasks} />
-        </motion.div>
-
-        {/* CARD 6 — Grafik Mingguan (2 col) */}
+        {/* CARD 5 — Grafik Mingguan (2 col) */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -318,7 +255,7 @@ const ManagerDashboard = ({ user }) => {
           <WeeklyChart tasks={tasks} />
         </motion.div>
 
-        {/* CARD 7 — Aktivitas Terbaru (4 col) */}
+        {/* CARD 6 — Aktivitas Terbaru (4 col) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
