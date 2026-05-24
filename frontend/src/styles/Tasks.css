@@ -17,6 +17,76 @@
   gap: 1rem;
 }
 
+/* ==========================================
+   Stat Cards
+   ========================================== */
+.tasks-stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .tasks-stat-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.tasks-stat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left-width: 3px;
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.tasks-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tasks-stat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.tasks-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-heading);
+}
+
+.tasks-stat-sub {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+html:not(.dark) .tasks-stat-card {
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+  border-color: #e4e9f0;
+}
+
+html:not(.dark) .tasks-stat-card:hover {
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.06),
+    0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* ==========================================
+   Task Board
+   ========================================== */
 .task-board-container {
   display: flex;
   gap: 1.5rem;
@@ -84,195 +154,222 @@
   padding-right: 0.25rem;
 }
 
-/* TASK CARD */
+/* Empty state kolom */
+.task-col-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  gap: 0.5rem;
+}
 
+.task-col-empty-icon {
+  font-size: 1.25rem;
+  opacity: 0.4;
+}
+
+.task-col-empty-text {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* Kolom Terlewat */
+.task-column-overdue {
+  border-color: rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.03);
+}
+
+/* ==========================================
+   Task Card
+   ========================================== */
 .task-card {
   padding: 1rem;
   border-radius: 0.75rem;
   cursor: default;
-  transition: box-shadow .3s, border-color .3s;
+  transition: box-shadow 0.3s, border-color 0.3s;
   position: relative;
   overflow: visible;
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .task-card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .task-priority-badge {
-  font-size: .625rem;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:.05em;
-  padding:.25rem .5rem;
-  border-radius:.25rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .priority-high {
-  color:var(--status-red);
-  background-color:var(--status-red-bg);
+  color: var(--status-red);
+  background-color: var(--status-red-bg);
 }
 
 .priority-medium {
-  color:var(--status-orange);
-  background-color:var(--status-orange-bg);
+  color: var(--status-orange);
+  background-color: var(--status-orange-bg);
 }
 
 .priority-low {
-  color:var(--text-secondary);
-  background-color:var(--bg-hover);
+  color: var(--text-secondary);
+  background-color: var(--bg-hover);
 }
 
-.task-card-title{
-  font-weight:500;
-  font-size:.875rem;
-  margin-bottom:.25rem;
-  line-height:1.4;
-  color:var(--text-heading);
+.task-card-title {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+  color: var(--text-heading);
 }
 
-.task-card-desc{
-  font-size:.75rem;
-  margin-bottom:.75rem;
-  color:var(--text-secondary);
-
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
+.task-card-desc {
+  font-size: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.task-card-footer{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  font-size:.75rem;
-  color:var(--text-secondary);
-
-  padding-top:.75rem;
-  border-top:1px solid var(--border-color);
+.task-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .task-meta-item,
-.task-deadline{
-  display:flex;
-  align-items:center;
-  gap:.25rem;
+.task-deadline {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-.task-deadline{
-  color:var(--status-red);
+.task-deadline {
+  color: var(--status-red);
 }
 
-/* DELETE BUTTON */
-
-.action-btn-danger{
-  border:none;
-  background:transparent;
-
-  width:30px;
-  height:30px;
-
-  border-radius:8px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  cursor:pointer;
-
-  color:#64748b;
+/* ==========================================
+   Delete Button
+   ========================================== */
+.action-btn-danger {
+  border: none;
+  background: transparent;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
 }
 
-.action-btn-danger:hover{
-  background:rgba(239,68,68,.12);
-  color:#ef4444;
+.action-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
 }
 
-/* STATUS */
-
-.task-status-select{
-  width:100%;
-  margin-top:.75rem;
-  padding-top:.75rem;
-  border-top:1px solid var(--border-color);
+/* ==========================================
+   Status Select
+   ========================================== */
+.task-status-select {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
 }
 
-.task-status-select select{
-  width:100%;
-  font-size:.75rem;
-  padding:.375rem .5rem;
-  border-radius:.375rem;
-
-  cursor:pointer;
-
-  background-color:var(--bg-hover);
-  border:1px solid var(--border-color);
-  color:var(--text-primary);
+.task-status-select select {
+  width: 100%;
+  font-size: 0.75rem;
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  background-color: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
-.task-status-select select:focus{
-  outline:none;
-  border-color:var(--accent-blue);
+.task-status-select select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
 }
 
-/* MODAL */
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-
-  background-color:rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  z-index:50;
-  padding:1rem;
+/* ==========================================
+   Modal
+   ========================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
 }
 
-.modal-card{
-  width:100%;
-  max-width:28rem;
-
-  border-radius:1rem;
-  padding:1.5rem;
-
-  background-color:var(--bg-card);
-  border:1px solid var(--border-color);
-
-  box-shadow:var(--shadow-neumorph);
+.modal-card {
+  width: 100%;
+  max-width: 28rem;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-neumorph);
 }
 
-.modal-title{
-  font-size:1.25rem;
-  font-weight:700;
-
-  color:var(--text-heading);
-  margin-bottom:1.5rem;
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 1.5rem;
 }
 
-.modal-form{
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.modal-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:.75rem;
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+/* Card overdue */
+.task-card-overdue {
+  border-color: rgba(239, 68, 68, 0.4);
+}
 
-  padding-top:1.5rem;
-  margin-top:1rem;
-
-  border-top:1px solid var(--border-color);
+/* Label overdue pengganti dropdown */
+.task-overdue-label {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.7rem;
+  color: var(--status-red);
+  text-align: center;
 }

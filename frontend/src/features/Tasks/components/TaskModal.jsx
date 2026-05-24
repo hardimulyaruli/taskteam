@@ -3,12 +3,9 @@ import { motion } from 'framer-motion';
 
 const formatDateForInput = (date) => {
   if (!date) return '';
-
-  // kalau sudah format YYYY-MM-DD
   if (typeof date === 'string' && date.length >= 10) {
     return date.slice(0, 10);
   }
-
   return '';
 };
 
@@ -118,19 +115,6 @@ const TaskModal = ({ onClose, onSubmit, task }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Status</label>
-            <select
-              className="input-field"
-              value={formData.status}
-              onChange={handleChange('status')}
-            >
-              <option value="To Do">To Do</option>
-              <option value="Dikerjakan">Dikerjakan</option>
-              <option value="Selesai">Selesai</option>
-            </select>
-          </div>
-
-          <div className="form-group">
             <label className="form-label">Prioritas</label>
             <select
               className="input-field"
@@ -147,7 +131,6 @@ const TaskModal = ({ onClose, onSubmit, task }) => {
             <button type="button" onClick={onClose} className="btn-secondary">
               Batal
             </button>
-
             <button type="submit" className="btn-primary">
               {task ? 'Simpan Perubahan' : 'Simpan Tugas'}
             </button>

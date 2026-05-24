@@ -151,7 +151,7 @@ const WeeklyChart = ({ tasks }) => {
 };
 
 // ============================================
-// ACTIVITY FEED — fix pakai field dari API
+// ACTIVITY FEED
 // ============================================
 const ActivityFeed = ({ activities }) => {
   const iconMap = {
@@ -195,19 +195,29 @@ const ActivityFeed = ({ activities }) => {
 // ============================================
 const TeamDashboard = ({ user }) => {
   const { tasks, activities } = useTasks();
+  const today = new Date();
 
   const myTasks = tasks.filter(
     t => t.assignee === user.username || t.assignee === 'team'
   );
 
+  // Exclude tugas overdue dari stats biar konsisten sama board
+  const overdueTasks = myTasks.filter(t =>
+    t.status !== 'Selesai' && t.deadline && new Date(t.deadline) < today
+  );
+  const overdueIds = new Set(overdueTasks.map(t => t.id));
+
+  const activeTasks = myTasks.filter(t => !overdueIds.has(t.id));
+
   const stats = {
-    total:      myTasks.length,
-    selesai:    myTasks.filter(t => t.status === 'Selesai').length,
-    dikerjakan: myTasks.filter(t => t.status === 'Dikerjakan').length,
-    todo:       myTasks.filter(t => t.status === 'To Do').length,
+    total:      activeTasks.length,
+    selesai:    activeTasks.filter(t => t.status === 'Selesai').length,
+    dikerjakan: activeTasks.filter(t => t.status === 'Dikerjakan').length,
+    todo:       activeTasks.filter(t => t.status === 'To Do').length,
   };
 
-  const urgentTasks = myTasks.filter(t => t.status !== 'Selesai').slice(0, 3);
+  // Tugas prioritas: exclude overdue, ambil yang belum selesai
+  const urgentTasks = activeTasks.filter(t => t.status !== 'Selesai').slice(0, 3);
 
   return (
     <div className="dashboard-page">

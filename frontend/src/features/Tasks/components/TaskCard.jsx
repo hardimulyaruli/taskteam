@@ -8,7 +8,7 @@ const getPriorityClass = (priority) => {
   return 'priority-low';
 };
 
-const TaskCard = ({ task, userRole, onUpdateStatus, onDelete }) => {
+const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue }) => {
   return (
     <motion.div
       layout
@@ -16,7 +16,7 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -4 }}
-      className="task-card"
+      className={`task-card ${isOverdue ? 'task-card-overdue' : ''}`}
     >
       <div className="task-card-top">
         <span className={`task-priority-badge ${getPriorityClass(task.priority)}`}>
@@ -41,7 +41,6 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete }) => {
         <div className="task-meta-item">
           <FiUser /> <span>{task.assignee}</span>
         </div>
-
         <div className="task-deadline">
           <FiClock /> <span>{task.deadline}</span>
         </div>
@@ -49,14 +48,20 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete }) => {
 
       {userRole === 'team' && (
         <div className="task-status-select">
-          <select
-            value={task.status}
-            onChange={(e) => onUpdateStatus(task.id, e.target.value)}
-          >
-            <option value="To Do">To Do</option>
-            <option value="Dikerjakan">Dikerjakan</option>
-            <option value="Selesai">Selesai</option>
-          </select>
+          {isOverdue ? (
+            <div className="task-overdue-label">
+              ⚠️ Hubungi manager untuk update status
+            </div>
+          ) : (
+            <select
+              value={task.status}
+              onChange={(e) => onUpdateStatus(task.id, e.target.value)}
+            >
+              <option value="To Do">To Do</option>
+              <option value="Dikerjakan">Dikerjakan</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+          )}
         </div>
       )}
     </motion.div>
