@@ -1,13 +1,31 @@
 import React from 'react';
-import { FiUsers } from 'react-icons/fi';
+import { FiUsers, FiLayout, FiPieChart, FiUserCheck } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
 const team = [
-  { name: 'Rakhafi Surya Permana', nim: '2250081142', role: 'Fullstack Developer', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rakhafi&backgroundColor=2f81f7' },
-  { name: 'Muhammad Hanif N', nim: '2350081125', role: 'Backend Developer', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Hanif&backgroundColor=2f81f7' },
-  { name: 'Veliana Alifa N', nim: '2350081127', role: 'Frontend Developer', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Veliana&backgroundColor=2f81f7' },
-  { name: 'Selvi Liana Putri H', nim: '2350081137', role: 'UI/UX Designer', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Selvi&backgroundColor=2f81f7' },
-  { name: 'Ruli Hardimulya', nim: '2350081141', role: 'System Analyst', img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ruli&backgroundColor=2f81f7' }
+  { name: 'Rakhafi Surya Permana', nim: '2250081142', role: 'Fullstack Developer', img: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Rakhafi&backgroundColor=2f81f7&facialHairChance=100' },
+  { name: 'Muhammad Hanif N',      nim: '2350081125', role: 'Backend Developer',   img: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Hanif123&backgroundColor=2f81f7&facialHairChance=100' },
+  { name: 'Veliana Alifah N',       nim: '2350081127', role: 'Frontend Developer',  img: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Sofia&backgroundColor=2f81f7&facialHairChance=0' },
+  { name: 'Selvi Liana Putri H',   nim: '2350081137', role: 'Backend Developer',      img: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Lily&backgroundColor=2f81f7&facialHairChance=0' },
+  { name: 'Ruli Hardimulya',       nim: '2350081141', role: 'Frontend Developer',      img: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Ruli999&backgroundColor=2f81f7&facialHairChance=100' },
+];
+
+const features = [
+  {
+    icon: FiLayout,
+    title: 'Kanban Board',
+    desc: 'Kelola tugas dengan tampilan board interaktif per status.',
+  },
+  {
+    icon: FiPieChart,
+    title: 'Dashboard Produktivitas',
+    desc: 'Pantau progres tim secara real-time dengan visualisasi data.',
+  },
+  {
+    icon: FiUserCheck,
+    title: 'Manajemen User',
+    desc: 'Atur hak akses dan role anggota tim dengan mudah.',
+  },
 ];
 
 const TeamMemberCard = ({ member, index }) => {
@@ -43,11 +61,40 @@ const AboutHero = () => (
       <FiUsers className="icon-lg" />
     </div>
     <h1 className="about-title">Tentang TaskTeam</h1>
-    <p className="about-subtitle">
-      TaskTeam adalah platform manajemen tugas kolaboratif yang dirancang khusus untuk
-      mempermudah pendelegasian, pemantauan tenggat waktu, dan sinkronisasi pekerjaan
-      di dalam tim secara real-time.
+  </motion.div>
+);
+
+const TaskTeamInfoCard = () => (
+  <motion.div
+    initial={{ opacity: 0, y: 16 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5 }}
+    className="about-info-card"
+  >
+    <div className="about-info-header">
+      <div className="about-info-logo">⚡</div>
+      <div>
+        <h2 className="about-info-title">TaskTeam</h2>
+        <p className="about-info-version">v1.0.0 · Tugas Besar Teknologi Web</p>
+      </div>
+    </div>
+    <p className="about-info-desc">
+      TaskTeam adalah aplikasi manajemen tugas tim berbasis web yang dirancang untuk memudahkan
+      koordinasi antar anggota tim. Dengan fitur kanban board, dashboard produktivitas, dan
+      manajemen user, TaskTeam membantu tim bekerja lebih terorganisir dan efisien.
     </p>
+    <div className="about-features-grid">
+      {features.map((f, i) => (
+        <div key={i} className="about-feature-item">
+          <div className="about-feature-icon">
+            <f.icon size={16} />
+          </div>
+          <h3 className="about-feature-title">{f.title}</h3>
+          <p className="about-feature-desc">{f.desc}</p>
+        </div>
+      ))}
+    </div>
   </motion.div>
 );
 
@@ -82,4 +129,4 @@ const TeamSection = () => {
   );
 };
 
-export { AboutHero, TeamSection, TeamMemberCard };
+export { AboutHero, TaskTeamInfoCard, TeamSection, TeamMemberCard };

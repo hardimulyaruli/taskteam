@@ -11,10 +11,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import '../../styles/Layout.css';
 
 const MENU_ITEMS = [
-  { title: 'Dashboard', icon: FiHome, path: '/dashboard', roles: ['admin', 'manager', 'team'] },
-  { title: 'Tugas', icon: FiCheckSquare, path: '/tasks', roles: ['admin', 'manager', 'team'] },
-  { title: 'Users', icon: FiUsers, path: '/users', roles: ['admin'] },
-  { title: 'About Us', icon: FiInfo, path: '/about', roles: ['admin', 'manager', 'team'] },
+  { title: 'Dashboard',  icon: FiHome,        path: '/dashboard', roles: ['admin', 'manager', 'team'] },
+  { title: 'Tugas',      icon: FiCheckSquare, path: '/tasks',     roles: ['manager', 'team'] },
+  { title: 'Users',      icon: FiUsers,       path: '/users',     roles: ['admin'] },
+  { title: 'About Us',   icon: FiInfo,        path: '/about',     roles: ['admin', 'manager', 'team'] },
 ];
 
 const Navbar = () => {

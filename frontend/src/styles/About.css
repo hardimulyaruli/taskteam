@@ -173,3 +173,121 @@ html:not(.dark) .about-logo-box {
   color: #4f46e5;
 }
 
+/* ==========================================
+   TaskTeamInfoCard
+   ========================================== */
+.about-info-card {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.about-info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.about-info-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background-color: var(--accent-blue-bg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.about-info-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+.about-info-version {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.about-info-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.about-features-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .about-features-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.about-feature-item {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.about-feature-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.about-feature-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+.about-feature-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Light-mode overrides untuk TaskTeamInfoCard */
+html:not(.dark) .about-info-card {
+  border-color: #e4e9f0;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+html:not(.dark) .about-feature-item {
+  background-color: #f8fafc;
+  border-color: #e4e9f0;
+}
+
+html:not(.dark) .about-feature-icon {
+  background-color: #ffffff;
+  border-color: #e4e9f0;
+}

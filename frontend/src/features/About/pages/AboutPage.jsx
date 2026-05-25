@@ -1,13 +1,14 @@
 import React from 'react';
 import { FiGithub } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import { AboutHero, TeamSection } from '../components/AboutComponents';
+import { AboutHero, TaskTeamInfoCard, TeamSection } from '../components/AboutComponents';
 import '../../../styles/About.css';
 
 const AboutPage = () => {
   return (
     <div className="about-page">
       <AboutHero />
+      <TaskTeamInfoCard />
       <TeamSection />
 
       <motion.div
@@ -24,7 +25,7 @@ const AboutPage = () => {
         <motion.a
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          href="https://github.com"
+          href="https://github.com/hardimulyaruli/taskteam"
           target="_blank"
           rel="noreferrer"
           className="btn-secondary inline-flex items-center gap-2"
