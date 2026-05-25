@@ -14,6 +14,7 @@ const LIST_TASKS = `
     tp.name   AS priority,
     tp.color  AS priority_color,
     t.due_date AS deadline,
+    t.is_revisi,
     t.created_by,
     t.created_at,
     t.updated_at,
@@ -38,6 +39,7 @@ const LIST_TASKS_BY_ASSIGNEE = `
     tp.name   AS priority,
     tp.color  AS priority_color,
     t.due_date AS deadline,
+    t.is_revisi,
     t.created_by,
     t.created_at,
     t.updated_at,
@@ -63,6 +65,7 @@ const GET_TASK_BY_ID = `
     tp.name   AS priority,
     tp.color  AS priority_color,
     t.due_date AS deadline,
+    t.is_revisi,
     t.created_by,
     t.created_at,
     t.updated_at,
@@ -98,7 +101,7 @@ const DELETE_ASSIGNMENTS = 'DELETE FROM task_assignments WHERE task_id = ?';
 // ── Update task fields ──
 const UPDATE_TASK = `
   UPDATE tasks
-  SET title = ?, description = ?, status_id = ?, priority_id = ?, due_date = ?, updated_at = NOW()
+  SET title = ?, description = ?, status_id = ?, priority_id = ?, due_date = ?, is_revisi = ?, updated_at = NOW()
   WHERE id = ? AND deleted_at IS NULL
 `;
 
@@ -114,7 +117,7 @@ const SOFT_DELETE_TASK = `
   WHERE id = ? AND deleted_at IS NULL
 `;
 
-// ── Check if user is assigned to task (or if the task is assigned to the entire 'team') ──
+// ── Check if user is assigned to task ──
 const CHECK_ASSIGNMENT = `
   SELECT 1 FROM task_assignments 
   WHERE task_id = ? AND (user_id = ? OR user_id = (SELECT id FROM users WHERE username = 'team' LIMIT 1)) 
