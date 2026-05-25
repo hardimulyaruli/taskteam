@@ -14,7 +14,7 @@ const getStatusClass = (status) => {
   return 'tt-status-to-do';
 };
 
-const TaskDetailModal = ({ task, onClose, onEdit, userRole }) => {
+const TaskDetailModal = ({ task, onClose, onEdit, onRevisi, userRole }) => {
   if (!task) return null;
 
   const today = new Date();
@@ -39,6 +39,8 @@ const TaskDetailModal = ({ task, onClose, onEdit, userRole }) => {
     return 'var(--status-green)';
   };
 
+  const isSelesai = task.status === 'Selesai';
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <motion.div
@@ -59,6 +61,9 @@ const TaskDetailModal = ({ task, onClose, onEdit, userRole }) => {
             <span className={`tt-status-badge ${getStatusClass(task.status)}`}>
               {task.status}
             </span>
+            {task.isRevisi && (
+              <span className="task-revisi-badge">🔄 Revisi</span>
+            )}
             {isOverdue && (
               <span className="dl-badge dl-overdue" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <FiAlertCircle size={10} /> Terlewat
@@ -77,7 +82,11 @@ const TaskDetailModal = ({ task, onClose, onEdit, userRole }) => {
         <div className="td-section">
           <p className="td-section-label">Deskripsi</p>
           <p className="td-desc">
-            {task.description || <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>Tidak ada deskripsi.</span>}
+            {task.description || (
+              <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                Tidak ada deskripsi.
+              </span>
+            )}
           </p>
         </div>
 
@@ -129,12 +138,21 @@ const TaskDetailModal = ({ task, onClose, onEdit, userRole }) => {
               <button onClick={onClose} className="btn-secondary">
                 Tutup
               </button>
-              <button
-                onClick={() => { onClose(); onEdit(task); }}
-                className="btn-primary"
-              >
-                Edit Tugas
-              </button>
+              {isSelesai ? (
+                <button
+                  onClick={() => { onClose(); onRevisi(task); }}
+                  className="btn-revisi"
+                >
+                  Revisi
+                </button>
+              ) : (
+                <button
+                  onClick={() => { onClose(); onEdit(task); }}
+                  className="btn-primary"
+                >
+                  Edit Tugas
+                </button>
+              )}
             </div>
           </>
         )}

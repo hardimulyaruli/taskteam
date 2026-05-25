@@ -21,10 +21,14 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView 
       style={{ cursor: 'pointer' }}
     >
       <div className="task-card-top">
-        <span className={`task-priority-badge ${getPriorityClass(task.priority)}`}>
-          {task.priority}
-        </span>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+          <span className={`task-priority-badge ${getPriorityClass(task.priority)}`}>
+            {task.priority}
+          </span>
+          {task.isRevisi && (
+            <span className="task-revisi-badge">🔄 Revisi</span>
+          )}
+        </div>
         {userRole === 'manager' && (
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}

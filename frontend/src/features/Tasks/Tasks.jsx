@@ -90,6 +90,7 @@ const Tasks = () => {
   const [showModal, setShowModal]   = useState(false);
   const [viewTask, setViewTask]     = useState(null);
   const [editTask, setEditTask]     = useState(null);
+  const [revisiTask, setRevisiTask] = useState(null);
   const scrollRef = useRef(null);
   const boardRef  = useRef(null);
 
@@ -134,6 +135,19 @@ const Tasks = () => {
     }
   };
 
+  const handleRevisiSubmit = async (formData) => {
+    try {
+      await updateTask(revisiTask.id, {
+        ...formData,
+        isRevisi: true,
+      });
+      setRevisiTask(null);
+    } catch (err) {
+      console.error('Gagal minta revisi:', err);
+      alert('Gagal menyimpan revisi.');
+    }
+  };
+
   const updateTaskStatus = async (id, newStatus) => {
     try {
       await updateTask(id, { status: newStatus });
@@ -143,12 +157,12 @@ const Tasks = () => {
     }
   };
 
-  const colWidth    = 288;
-  const gap         = 24;
-  const totalCols   = columns.length + 1;
-  const boardWidth  = totalCols * colWidth + (totalCols - 1) * gap;
+  const colWidth      = 288;
+  const gap           = 24;
+  const totalCols     = columns.length + 1;
+  const boardWidth    = totalCols * colWidth + (totalCols - 1) * gap;
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth - 80 : 1200;
-  const maxDrag     = Math.max(0, boardWidth - viewportWidth);
+  const maxDrag       = Math.max(0, boardWidth - viewportWidth);
 
   return (
     <div className="pb-10 h-full flex flex-col">
@@ -265,6 +279,7 @@ const Tasks = () => {
             task={viewTask}
             onClose={() => setViewTask(null)}
             onEdit={(task) => { setEditTask(task); setViewTask(null); }}
+            onRevisi={(task) => { setRevisiTask(task); setViewTask(null); }}
             userRole={user.role}
           />
         )}
@@ -277,6 +292,19 @@ const Tasks = () => {
             task={editTask}
             onClose={() => { setShowModal(false); setEditTask(null); }}
             onSubmit={editTask ? handleEditSubmit : handleAddSubmit}
+            isRevisiMode={false}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* MODAL REVISI */}
+      <AnimatePresence>
+        {revisiTask && (
+          <TaskModal
+            task={revisiTask}
+            onClose={() => setRevisiTask(null)}
+            onSubmit={handleRevisiSubmit}
+            isRevisiMode={true}
           />
         )}
       </AnimatePresence>
