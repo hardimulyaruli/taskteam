@@ -8,7 +8,7 @@ const getPriorityClass = (priority) => {
   return 'priority-low';
 };
 
-const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue }) => {
+const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView }) => {
   return (
     <motion.div
       layout
@@ -17,6 +17,8 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue }) => {
       exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -4 }}
       className={`task-card ${isOverdue ? 'task-card-overdue' : ''}`}
+      onClick={() => onView && onView(task)}
+      style={{ cursor: 'pointer' }}
     >
       <div className="task-card-top">
         <span className={`task-priority-badge ${getPriorityClass(task.priority)}`}>
@@ -25,7 +27,7 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue }) => {
 
         {userRole === 'manager' && (
           <button
-            onClick={() => onDelete(task.id)}
+            onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}
             className="action-btn-danger"
             title="Hapus tugas"
           >
@@ -47,7 +49,10 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue }) => {
       </div>
 
       {userRole === 'team' && (
-        <div className="task-status-select">
+        <div
+          className="task-status-select"
+          onClick={(e) => e.stopPropagation()}
+        >
           {isOverdue ? (
             <div className="task-overdue-label">
               ⚠️ Hubungi manager untuk update status

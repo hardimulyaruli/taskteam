@@ -5,6 +5,7 @@ import { FiPlus } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import TaskCard from './components/TaskCard';
 import TaskModal from './components/TaskModal';
+import TaskDetailModal from './components/TaskDetailModal';
 import '../../styles/Tasks.css';
 
 // ============================================
@@ -86,9 +87,11 @@ const StatCards = ({ tasks }) => {
 const Tasks = () => {
   const { user } = useAuth();
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal]   = useState(false);
+  const [viewTask, setViewTask]     = useState(null);
+  const [editTask, setEditTask]     = useState(null);
   const scrollRef = useRef(null);
-  const boardRef = useRef(null);
+  const boardRef  = useRef(null);
 
   const today = new Date();
 
@@ -99,12 +102,10 @@ const Tasks = () => {
       })
     : tasks;
 
-  // Tugas lewat deadline: belum selesai dan deadline sudah lewat
   const overdueTasks = displayTasks.filter(t =>
     t.status !== 'Selesai' && t.deadline && new Date(t.deadline) < today
   );
 
-  // ID tugas yang lewat deadline — untuk exclude dari kolom biasa
   const overdueIds = new Set(overdueTasks.map(t => t.id));
 
   const columns = [
@@ -123,6 +124,16 @@ const Tasks = () => {
     }
   };
 
+  const handleEditSubmit = async (formData) => {
+    try {
+      await updateTask(editTask.id, formData);
+      setEditTask(null);
+    } catch (err) {
+      console.error('Gagal edit tugas:', err);
+      alert('Gagal menyimpan perubahan.');
+    }
+  };
+
   const updateTaskStatus = async (id, newStatus) => {
     try {
       await updateTask(id, { status: newStatus });
@@ -132,12 +143,12 @@ const Tasks = () => {
     }
   };
 
-  const colWidth = 288;
-  const gap = 24;
-  const totalCols = columns.length + 1;
-  const boardWidth = totalCols * colWidth + (totalCols - 1) * gap;
+  const colWidth    = 288;
+  const gap         = 24;
+  const totalCols   = columns.length + 1;
+  const boardWidth  = totalCols * colWidth + (totalCols - 1) * gap;
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth - 80 : 1200;
-  const maxDrag = Math.max(0, boardWidth - viewportWidth);
+  const maxDrag     = Math.max(0, boardWidth - viewportWidth);
 
   return (
     <div className="pb-10 h-full flex flex-col">
@@ -169,7 +180,7 @@ const Tasks = () => {
           dragConstraints={{ left: -maxDrag, right: 0 }}
           dragElastic={0.05}
         >
-          {/* KOLOM BIASA — exclude tugas yang overdue */}
+          {/* KOLOM BIASA */}
           {columns.map(col => (
             <div key={col.id} className="task-column">
               <div className="task-column-header">
@@ -195,6 +206,7 @@ const Tasks = () => {
                         onUpdateStatus={updateTaskStatus}
                         onDelete={deleteTask}
                         isOverdue={false}
+                        onView={setViewTask}
                       />
                     ))
                   }
@@ -236,6 +248,7 @@ const Tasks = () => {
                       onUpdateStatus={updateTaskStatus}
                       onDelete={deleteTask}
                       isOverdue={true}
+                      onView={setViewTask}
                     />
                   ))
                 )}
@@ -245,11 +258,25 @@ const Tasks = () => {
         </motion.div>
       </div>
 
+      {/* MODAL DETAIL */}
       <AnimatePresence>
-        {showModal && (
+        {viewTask && (
+          <TaskDetailModal
+            task={viewTask}
+            onClose={() => setViewTask(null)}
+            onEdit={(task) => { setEditTask(task); setViewTask(null); }}
+            userRole={user.role}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* MODAL TAMBAH / EDIT */}
+      <AnimatePresence>
+        {(showModal || editTask) && (
           <TaskModal
-            onClose={() => setShowModal(false)}
-            onSubmit={handleAddSubmit}
+            task={editTask}
+            onClose={() => { setShowModal(false); setEditTask(null); }}
+            onSubmit={editTask ? handleEditSubmit : handleAddSubmit}
           />
         )}
       </AnimatePresence>

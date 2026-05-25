@@ -373,3 +373,109 @@ html:not(.dark) .tasks-stat-card:hover {
   color: var(--status-red);
   text-align: center;
 }
+
+/* ==========================================
+   Task Detail Modal
+   ========================================== */
+.td-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.td-close-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.td-close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-heading);
+}
+
+.td-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.td-section {
+  margin-bottom: 12px;
+}
+
+.td-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.td-desc {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.td-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 16px 0;
+}
+
+.td-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.td-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.td-info-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+.td-info-label {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.td-info-value {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-heading);
+}
+
+html:not(.dark) .td-title       { color: #1e293b; }
+html:not(.dark) .td-desc        { color: #334155; }
+html:not(.dark) .td-info-value  { color: #1e293b; }
+html:not(.dark) .td-close-btn   { border-color: #e4e9f0; }
+html:not(.dark) .td-close-btn:hover { background: #f1f5f9; }
+html:not(.dark) .td-divider     { background: #e4e9f0; }
