@@ -124,17 +124,27 @@
   color: var(--text-secondary);
 }
 
+/* ==========================================
+   Action Buttons
+   ========================================== */
 .action-btn-danger {
   padding: 0.25rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-secondary);
-  transition: color 0.2s;
+  transition: background 0.2s, color 0.2s;
   background: none;
   border: none;
   cursor: pointer;
 }
 
 .action-btn-danger:hover {
-  color: var(--status-red);
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
 }
 
 .action-btn-danger:disabled {
@@ -142,8 +152,27 @@
   cursor: not-allowed;
 }
 
+.action-btn-edit {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.action-btn-edit:hover {
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+}
+
 /* ==========================================
-   Light-mode users overrides (targeted only)
+   Light-mode users overrides
    ========================================== */
 html:not(.dark) .table-card {
   box-shadow:
@@ -173,3 +202,99 @@ html:not(.dark) .badge-inactive {
   border-color: #dde2ea;
 }
 
+/* ==========================================
+   Inline Edit — Users Table
+   ========================================== */
+.users-inline-input {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  width: 100%;
+  max-width: 140px;
+}
+
+.users-inline-input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.users-action-edit {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+}
+
+.users-action-edit:hover {
+  background: var(--accent-blue-bg);
+  color: var(--accent-blue);
+}
+
+.users-action-edit:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.users-action-save {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--status-green);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.users-action-save:hover {
+  background: rgba(74, 222, 128, 0.25);
+}
+
+.users-action-cancel {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--status-red);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.users-action-cancel:hover {
+  background: rgba(248, 113, 113, 0.25);
+}
+
+html:not(.dark) .users-action-save {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+html:not(.dark) .users-action-save:hover {
+  background: #bbf7d0;
+}
+
+html:not(.dark) .users-action-cancel {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+html:not(.dark) .users-action-cancel:hover {
+  background: #fecaca;
+}
+
+html:not(.dark) .users-inline-input {
+  background: #f8fafc;
+  border-color: #e4e9f0;
+  color: #1e293b;
+}

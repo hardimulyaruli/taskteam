@@ -1,12 +1,64 @@
 import React, { useState } from 'react';
-import { FiPlus, FiTrash2 } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { FiPlus, FiTrash2, FiEdit2, FiAlertTriangle } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../context/AuthContext';
 import { useUsers } from '../../../context/UserContext';
 import UserModal from '../components/UserModal';
 import '../../../styles/Users.css';
 
-const UserTableRow = ({ user: u, onDelete, isCurrentUser }) => {
+// ============================================
+// CONFIRM DELETE DIALOG
+// ============================================
+const ConfirmDialog = ({ user, onConfirm, onCancel }) => {
+  return (
+    <div className="modal-overlay">
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 30, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        className="modal-card"
+        style={{ maxWidth: '400px' }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center', padding: '8px 0 16px' }}>
+          <div style={{
+            width: '48px', height: '48px', borderRadius: '50%',
+            background: 'rgba(239,68,68,0.12)', display: 'flex',
+            alignItems: 'center', justifyContent: 'center',
+          }}>
+            <FiAlertTriangle size={22} color="#ef4444" />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-heading)', marginBottom: '6px' }}>
+              Hapus Pengguna?
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              Anda yakin ingin menghapus <strong style={{ color: 'var(--text-primary)' }}>{user?.name}</strong> (@{user?.username})?
+              Tindakan ini tidak dapat dibatalkan.
+            </p>
+          </div>
+        </div>
+        <div className="modal-actions">
+          <button onClick={onCancel} className="btn-secondary">
+            Batal
+          </button>
+          <button
+            onClick={onConfirm}
+            className="btn-primary"
+            style={{ background: '#ef4444', borderColor: '#ef4444' }}
+          >
+            Ya, Hapus
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+// ============================================
+// USER TABLE ROW
+// ============================================
+const UserTableRow = ({ user: u, onDelete, onEdit, isCurrentUser }) => {
   return (
     <tr className="table-row">
       <td className="table-td td-primary">{u.name}</td>
@@ -18,23 +70,37 @@ const UserTableRow = ({ user: u, onDelete, isCurrentUser }) => {
         </span>
       </td>
       <td className="table-td-right">
-        <button
-          onClick={() => onDelete(u.id)}
-          disabled={isCurrentUser}
-          className="action-btn-danger"
-          title={isCurrentUser ? 'Tidak dapat menghapus akun sendiri' : 'Hapus pengguna'}
-        >
-          <FiTrash2 />
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
+          <button
+            onClick={() => onEdit(u)}
+            className="action-btn-edit"
+            title="Edit pengguna"
+          >
+            <FiEdit2 />
+          </button>
+          <button
+            onClick={() => onDelete(u)}
+            disabled={isCurrentUser}
+            className="action-btn-danger"
+            title={isCurrentUser ? 'Tidak dapat menghapus akun sendiri' : 'Hapus pengguna'}
+          >
+            <FiTrash2 />
+          </button>
+        </div>
       </td>
     </tr>
   );
 };
 
+// ============================================
+// MAIN PAGE
+// ============================================
 const UsersPage = () => {
   const { user: activeUser } = useAuth();
   const { users, deleteUser } = useUsers();
   const [showModal, setShowModal] = useState(false);
+  const [editUser, setEditUser] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   if (activeUser.role !== 'admin') {
     return (
@@ -43,6 +109,29 @@ const UsersPage = () => {
       </div>
     );
   }
+
+  const handleEdit = (user) => {
+    setEditUser(user);
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    setEditUser(null);
+  };
+
+  const handleDeleteClick = (user) => {
+    setDeleteTarget(user);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteUser(deleteTarget.id);
+    setDeleteTarget(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteTarget(null);
+  };
 
   return (
     <div className="users-page">
@@ -80,7 +169,8 @@ const UsersPage = () => {
                 <UserTableRow
                   key={u.id}
                   user={u}
-                  onDelete={deleteUser}
+                  onDelete={handleDeleteClick}
+                  onEdit={handleEdit}
                   isCurrentUser={u.username === activeUser.username}
                 />
               ))
@@ -89,7 +179,24 @@ const UsersPage = () => {
         </table>
       </div>
 
-      {showModal && <UserModal onClose={() => setShowModal(false)} />}
+      <AnimatePresence>
+        {showModal && (
+          <UserModal
+            onClose={handleClose}
+            editUser={editUser}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {deleteTarget && (
+          <ConfirmDialog
+            user={deleteTarget}
+            onConfirm={handleConfirmDelete}
+            onCancel={handleCancelDelete}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
