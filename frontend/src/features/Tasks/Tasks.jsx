@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
 import { FiPlus } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import TaskCard from './components/TaskCard';
 import TaskModal from './components/TaskModal';
 import TaskDetailModal from './components/TaskDetailModal';
@@ -87,6 +88,8 @@ const StatCards = ({ tasks }) => {
 const Tasks = () => {
   const { user } = useAuth();
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
+  const location = useLocation();
+
   const [showModal, setShowModal]   = useState(false);
   const [viewTask, setViewTask]     = useState(null);
   const [editTask, setEditTask]     = useState(null);
@@ -95,6 +98,16 @@ const Tasks = () => {
   const boardRef  = useRef(null);
 
   const today = new Date();
+
+  // ── Baca taskId dari URL, langsung buka modal detail ──
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const taskId = params.get('taskId');
+    if (taskId && tasks.length > 0) {
+      const found = tasks.find(t => String(t.id) === String(taskId));
+      if (found) setViewTask(found);
+    }
+  }, [location.search, tasks]);
 
   const displayTasks = user.role === 'team'
     ? tasks.filter(t => {
