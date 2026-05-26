@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiClock, FiUser, FiTrash2 } from 'react-icons/fi';
+import { FiClock, FiUser, FiTrash2, FiCheckCircle } from 'react-icons/fi';
 
 const getPriorityClass = (priority) => {
   if (priority === 'Tinggi') return 'priority-high';
@@ -57,7 +57,12 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView 
           className="task-status-select"
           onClick={(e) => e.stopPropagation()}
         >
-          {isOverdue ? (
+          {task.status === 'Selesai' ? (
+            <div className="task-done-label">
+              <FiCheckCircle style={{ color: 'var(--status-green)' }} />
+              Tugas telah selesai
+            </div>
+          ) : isOverdue ? (
             <div className="task-overdue-label">
               ⚠️ Hubungi manager untuk update status
             </div>

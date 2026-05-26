@@ -313,6 +313,33 @@ html:not(.dark) .tasks-stat-card:hover {
   border-color: var(--accent-blue);
 }
 
+/* Label overdue pengganti dropdown */
+.task-overdue-label {
+  font-size: 0.7rem;
+  color: var(--status-red);
+  text-align: center;
+}
+
+/* Label selesai — tidak bisa diubah */
+.task-done-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--status-green);
+  padding: 6px 10px;
+  border-radius: 0.5rem;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+html:not(.dark) .task-done-label {
+  background: #dcfce7;
+  border-color: #bbf7d0;
+  color: #16a34a;
+}
+
 /* ==========================================
    Modal
    ========================================== */
@@ -363,16 +390,6 @@ html:not(.dark) .tasks-stat-card:hover {
 /* Card overdue */
 .task-card-overdue {
   border-color: rgba(239, 68, 68, 0.4);
-}
-
-/* Label overdue pengganti dropdown */
-.task-overdue-label {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border-color);
-  font-size: 0.7rem;
-  color: var(--status-red);
-  text-align: center;
 }
 
 /* ==========================================
@@ -474,12 +491,12 @@ html:not(.dark) .tasks-stat-card:hover {
   color: var(--text-heading);
 }
 
-html:not(.dark) .td-title       { color: #1e293b; }
-html:not(.dark) .td-desc        { color: #334155; }
-html:not(.dark) .td-info-value  { color: #1e293b; }
-html:not(.dark) .td-close-btn   { border-color: #e4e9f0; }
+html:not(.dark) .td-title         { color: #1e293b; }
+html:not(.dark) .td-desc          { color: #334155; }
+html:not(.dark) .td-info-value    { color: #1e293b; }
+html:not(.dark) .td-close-btn     { border-color: #e4e9f0; }
 html:not(.dark) .td-close-btn:hover { background: #f1f5f9; }
-html:not(.dark) .td-divider     { background: #e4e9f0; }
+html:not(.dark) .td-divider       { background: #e4e9f0; }
 
 /* ==========================================
    Revisi Badge & Button
@@ -544,20 +561,9 @@ html:not(.dark) .revisi-info-box {
   flex-shrink: 0;
 }
 
-.dl-overdue {
-  background: rgba(248, 113, 113, 0.15);
-  color: #f87171;
-}
-
-.dl-soon {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-}
-
-.dl-ok {
-  background: rgba(74, 222, 128, 0.15);
-  color: #4ade80;
-}
+.dl-overdue { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+.dl-soon    { background: rgba(245, 158, 11, 0.15);  color: #f59e0b; }
+.dl-ok      { background: rgba(74, 222, 128, 0.15);  color: #4ade80; }
 
 html:not(.dark) .dl-overdue { background: #fee2e2; color: #dc2626; }
 html:not(.dark) .dl-soon    { background: #fef3c7; color: #d97706; }
