@@ -568,3 +568,14 @@ html:not(.dark) .revisi-info-box {
 html:not(.dark) .dl-overdue { background: #fee2e2; color: #dc2626; }
 html:not(.dark) .dl-soon    { background: #fef3c7; color: #d97706; }
 html:not(.dark) .dl-ok      { background: #dcfce7; color: #16a34a; }
+
+/* Hint klik kartu untuk team */
+.task-click-hint {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: center;
+  opacity: 0.7;
+}
