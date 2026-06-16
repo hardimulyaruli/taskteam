@@ -8,7 +8,7 @@ import { useTasks } from '../../../context/TaskContext';
 import '../../../styles/Dashboard.css';
 
 // ============================================
-// DONUT CHART
+// DONUT CHART — disesuaikan dengan TeamDashboard
 // ============================================
 const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
   const canvasRef = useRef(null);
@@ -18,40 +18,39 @@ const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    const radius = 52;
-    const lineWidth = 14;
+    const cx = 80, cy = 80, r = 58, lw = 28;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (total === 0) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(128,128,128,0.15)';
-      ctx.lineWidth = lineWidth;
-      ctx.stroke();
-      return;
-    }
+    // Background track
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(128,128,128,0.1)';
+    ctx.lineWidth = lw;
+    ctx.shadowBlur = 0;
+    ctx.stroke();
+
+    if (total === 0) return;
 
     const segments = [
-      { value: selesai,    color: '#4ade80' },
-      { value: dikerjakan, color: '#60a5fa' },
+      { value: selesai,    color: '#00ea7d' },
+      { value: dikerjakan, color: '#67abff' },
       { value: todo,       color: '#f59e0b' },
-      { value: terlewat,   color: '#f87171' },
+      { value: terlewat,   color: '#ee0f38' },
     ];
 
     let startAngle = -Math.PI / 2;
+    ctx.shadowBlur = 16;
     segments.forEach(seg => {
       if (seg.value === 0) return;
       const slice = (seg.value / total) * Math.PI * 2;
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, startAngle, startAngle + slice);
+      ctx.arc(cx, cy, r, startAngle, startAngle + slice);
       ctx.strokeStyle = seg.color;
-      ctx.lineWidth = lineWidth;
-      ctx.lineCap = 'round';
+      ctx.lineWidth = lw;
+      ctx.lineCap = 'butt';
       ctx.stroke();
-      startAngle += slice + 0.04;
+      startAngle += slice + 0.02;
     });
   }, [selesai, dikerjakan, todo, terlewat, total]);
 
@@ -60,7 +59,7 @@ const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
   return (
     <div className="tt-donut-wrap">
       <div className="tt-donut-canvas-wrap">
-        <canvas ref={canvasRef} width={130} height={130} />
+        <canvas ref={canvasRef} width={160} height={160} />
         <div className="tt-donut-center">
           <span className="tt-donut-pct">{pct}%</span>
           <span className="tt-donut-label">selesai</span>
@@ -68,10 +67,10 @@ const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
       </div>
       <div className="tt-donut-legend">
         {[
-          { label: 'Selesai',    val: selesai,    color: '#4ade80' },
-          { label: 'Dikerjakan', val: dikerjakan, color: '#60a5fa' },
+          { label: 'Selesai',    val: selesai,    color: '#00ea7d' },
+          { label: 'Dikerjakan', val: dikerjakan, color: '#67abff' },
           { label: 'To Do',      val: todo,       color: '#f59e0b' },
-          { label: 'Terlewat',   val: terlewat,   color: '#f87171' },
+          { label: 'Terlewat',   val: terlewat,   color: '#ee0f38' },
         ].map(({ label, val, color }) => (
           <div key={label} className="tt-legend-item">
             <span className="tt-legend-dot" style={{ background: color }} />
@@ -85,7 +84,31 @@ const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
 };
 
 // ============================================
-// WEEKLY BAR CHART
+// PROGRESS BAR — pakai tt- class biar konsisten
+// ============================================
+const ProgressBar = ({ label, value, total, color }) => {
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+  return (
+    <div className="tt-progress-row">
+      <div className="tt-progress-header">
+        <span>{label}</span>
+        <span>{value}/{total}</span>
+      </div>
+      <div className="tt-progress-track">
+        <motion.div
+          className="tt-progress-fill"
+          style={{ background: color }}
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// ============================================
+// WEEKLY BAR CHART — disesuaikan dengan TeamDashboard
 // ============================================
 const WeeklyChart = ({ tasks }) => {
   const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
@@ -110,7 +133,8 @@ const WeeklyChart = ({ tasks }) => {
               className="tt-week-bar"
               style={{
                 height: `${Math.round((count / max) * 100)}%`,
-                background: count > 0 ? '#4ade80' : 'rgba(128,128,128,0.15)',
+                background: count > 0 ? '#00ea7d' : 'rgba(128,128,128,0.15)',
+                boxShadow: count > 0 ? '0 0 8px #00ff8866' : 'none',
               }}
               initial={{ height: 0 }}
               animate={{ height: `${Math.round((count / max) * 100)}%` }}
@@ -143,8 +167,6 @@ const ManagerDashboard = ({ user }) => {
     terlewat:   overdueTasks.length,
   };
 
-  const pct = (n) => `${Math.round((n / stats.total) * 100) || 0}%`;
-
   const deadlineSorted = tasks
     .filter(t => t.status !== 'Selesai' && t.deadline)
     .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
@@ -173,7 +195,7 @@ const ManagerDashboard = ({ user }) => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="bento-card bento-col-span-2 bento-row-span-2"
+          className="bento-card bento-card-accent bento-col-span-2 bento-row-span-2"
         >
           <h3 className="stat-card-label">Ringkasan Proyek Tim</h3>
           <DonutChart
@@ -182,38 +204,19 @@ const ManagerDashboard = ({ user }) => {
             todo={stats.todo}
             terlewat={stats.terlewat}
           />
-          <div className="progress-section">
-            {[
-              { label: 'Selesai',    count: stats.selesai,    fillClass: 'progress-fill-green'  },
-              { label: 'Dikerjakan', count: stats.dikerjakan, fillClass: 'progress-fill-orange' },
-              { label: 'To Do',      count: stats.todo,       fillClass: 'progress-fill-muted'  },
-              { label: 'Terlewat',   count: stats.terlewat,   fillClass: 'progress-fill-red'    },
-            ].map(({ label, count, fillClass }) => (
-              <div key={label}>
-                <div className="progress-item-label">
-                  <span>{label}</span>
-                  <span className="progress-item-count">{count}/{stats.total}</span>
-                </div>
-                <div className="progress-track">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: pct(count) }}
-                    transition={{ duration: 1 }}
-                    className={fillClass}
-                  />
-                </div>
-              </div>
-            ))}
+          <div className="tt-progress-section">
+            <ProgressBar label="Selesai"    value={stats.selesai}    total={stats.total} color="#00ea7d" />
+            <ProgressBar label="Dikerjakan" value={stats.dikerjakan} total={stats.total} color="#67abff" />
+            <ProgressBar label="To Do"      value={stats.todo}       total={stats.total} color="#f59e0b" />
+            <ProgressBar label="Terlewat"   value={stats.terlewat}   total={stats.total} color="#ee0f38" />
           </div>
         </motion.div>
 
-        {/* CARD 2 — Stat: Selesai */}
+        {/* CARD 2 & 3 — Stat Cards */}
         <StatCard label="Selesai"    value={stats.selesai}    sub="↑ 1 dari minggu lalu" index={1} />
-
-        {/* CARD 3 — Stat: Dikerjakan */}
         <StatCard label="Dikerjakan" value={stats.dikerjakan} sub="Sedang berjalan"        index={2} />
 
-        {/* CARD 4 — Deadline Terdekat (2 col) */}
+        {/* CARD 4 — Deadline Terdekat */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -238,7 +241,7 @@ const ManagerDashboard = ({ user }) => {
           </div>
         </motion.div>
 
-        {/* CARD 5 — Grafik Mingguan (2 col) */}
+        {/* CARD 5 — Grafik Mingguan */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -255,7 +258,7 @@ const ManagerDashboard = ({ user }) => {
           <WeeklyChart tasks={tasks} />
         </motion.div>
 
-        {/* CARD 6 — Aktivitas Terbaru (4 col) */}
+        {/* CARD 6 — Aktivitas Terbaru */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

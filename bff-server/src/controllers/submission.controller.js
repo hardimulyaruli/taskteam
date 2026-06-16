@@ -15,7 +15,7 @@ async function upload(req, res, next) {
     );
     return res.status(201).json({ submissions });
   } catch (err) {
-    // Jika upload gagal, hapus file yang sudah terlanjur tersimpan
+    // Jika upload gagal, hapus file 
     if (req.files?.length) {
       const fs = require('fs');
       for (const file of req.files) {

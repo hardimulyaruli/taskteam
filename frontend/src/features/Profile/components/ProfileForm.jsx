@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { FiUser, FiMail, FiLock, FiSave, FiCheckCircle } from 'react-icons/fi';
+import { FiUser, FiAtSign, FiLock, FiSave, FiCheckCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../../context/AuthContext';
 
 const ProfileForm = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, updatePassword } = useAuth();
+
   const [formData, setFormData] = useState({
     name: user?.name || '',
     username: user?.username || '',
@@ -14,11 +15,17 @@ const ProfileForm = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleChange = (field) => (e) => {
+  // ── Nama Lengkap & Username sinkron (mengarah ke kolom yang sama) ──
+  const handleNameOrUsernameChange = (e) => {
+    const value = e.target.value;
+    setFormData(prev => ({ ...prev, name: value, username: value }));
+  };
+
+  const handlePasswordChange = (field) => (e) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
 
@@ -28,13 +35,23 @@ const ProfileForm = () => {
     }
 
     setIsSaving(true);
-    setTimeout(() => {
-      updateProfile({ name: formData.name, username: formData.username });
+    try {
+      if (formData.username !== user?.username) {
+        await updateProfile(formData.username);
+      }
+
+      if (formData.password) {
+        await updatePassword(formData.password);
+      }
+
       setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
       setMessage({ type: 'success', text: 'Profil berhasil diperbarui!' });
-      setIsSaving(false);
       setTimeout(() => setMessage({ type: '', text: '' }), 3000);
-    }, 800);
+    } catch (err) {
+      setMessage({ type: 'error', text: err?.response?.data?.message || 'Gagal menyimpan perubahan.' });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -42,11 +59,12 @@ const ProfileForm = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="profile-form-card"
+      style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
     >
-      <h2 className="form-section-title">Informasi Dasar</h2>
+      {/* INFORMASI DASAR + GANTI PASSWORD */}
+      <form onSubmit={handleSubmit} className="profile-form-card">
+        <h2 className="form-section-title">Informasi Dasar</h2>
 
-      <form onSubmit={handleSubmit}>
         <div className="form-grid-2">
           <div className="form-group">
             <label className="form-label">
@@ -56,19 +74,19 @@ const ProfileForm = () => {
               type="text"
               required
               value={formData.name}
-              onChange={handleChange('name')}
+              onChange={handleNameOrUsernameChange}
               className="input-field"
             />
           </div>
           <div className="form-group">
             <label className="form-label">
-              <FiMail /> Username
+              <FiAtSign /> Username
             </label>
             <input
               type="text"
               required
               value={formData.username}
-              onChange={handleChange('username')}
+              onChange={handleNameOrUsernameChange}
               className="input-field"
             />
           </div>
@@ -85,7 +103,7 @@ const ProfileForm = () => {
               <input
                 type="password"
                 value={formData.password}
-                onChange={handleChange('password')}
+                onChange={handlePasswordChange('password')}
                 className="input-field"
                 placeholder="••••••••"
               />
@@ -97,7 +115,7 @@ const ProfileForm = () => {
               <input
                 type="password"
                 value={formData.confirmPassword}
-                onChange={handleChange('confirmPassword')}
+                onChange={handlePasswordChange('confirmPassword')}
                 className="input-field"
                 placeholder="••••••••"
               />

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import api from '../services/api'
-import { loginRequest } from '../services/auth'
+import { loginRequest, fetchMe, updateProfileRequest, updatePasswordRequest, uploadAvatarRequest, deleteAvatarRequest } from '../services/auth'
 
 const AUTH_STORAGE_KEY = 'taskteam-auth'
 const AuthContext = createContext(null)
@@ -63,15 +63,89 @@ export function AuthProvider({ children }) {
     setAuth(null, null)
   }, [setAuth])
 
+  // ── Update nama lengkap / username ──
+  const updateProfile = useCallback(
+    async (username) => {
+      const response = await updateProfileRequest(username)
+      const updatedUser = response.data?.user
+
+      if (updatedUser) {
+        setAuth(updatedUser, token)
+      }
+
+      return updatedUser
+    },
+    [setAuth, token],
+  )
+
+  // ── Update password ──
+  const updatePassword = useCallback(
+    async (password) => {
+      const response = await updatePasswordRequest(password)
+      return response.data
+    },
+    [],
+  )
+
+  // ── Upload foto profil ──
+  const uploadAvatar = useCallback(
+    async (file) => {
+      const response = await uploadAvatarRequest(file)
+      const updatedUser = response.data?.user
+
+      if (updatedUser) {
+        setAuth(updatedUser, token)
+      }
+
+      return updatedUser
+    },
+    [setAuth, token],
+  )
+
+  // ── Hapus foto profil ──
+  const deleteAvatar = useCallback(
+    async () => {
+      const response = await deleteAvatarRequest()
+      const updatedUser = response.data?.user
+
+      if (updatedUser) {
+        setAuth(updatedUser, token)
+      }
+
+      return updatedUser
+    },
+    [setAuth, token],
+  )
+
+  // ── Refresh data user dari server (untuk sinkron avatar/username) ──
+  const refreshUser = useCallback(
+    async () => {
+      const response = await fetchMe()
+      const refreshedUser = response.data?.user
+
+      if (refreshedUser) {
+        setAuth(refreshedUser, token)
+      }
+
+      return refreshedUser
+    },
+    [setAuth, token],
+  )
+
   const value = useMemo(
     () => ({
       user,
       token,
       login,
       logout,
+      updateProfile,
+      updatePassword,
+      uploadAvatar,
+      deleteAvatar,
+      refreshUser,
       isAuthenticated: Boolean(user && token),
     }),
-    [user, token, login, logout],
+    [user, token, login, logout, updateProfile, updatePassword, uploadAvatar, deleteAvatar, refreshUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

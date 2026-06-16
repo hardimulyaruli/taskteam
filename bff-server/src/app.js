@@ -8,6 +8,7 @@ const authRoutes       = require('./routes/auth.routes');
 const dashboardRoutes  = require('./routes/dashboard.routes');
 const taskRoutes       = require('./routes/task.routes');
 const submissionRoutes = require('./routes/submission.routes'); // ← BARU
+const commentRoutes    = require('./routes/comment.routes');    // ← BARU
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../swagger.yaml'));
@@ -45,6 +46,11 @@ app.use((req, res, next) => {
 const UPLOAD_DIR = path.join(__dirname, '../uploads');
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
+// Serve foto profil secara publik (untuk ditampilkan di <img>)
+const AVATAR_DIR = path.join(__dirname, '../uploads/avatars');
+if (!fs.existsSync(AVATAR_DIR)) fs.mkdirSync(AVATAR_DIR, { recursive: true });
+app.use('/uploads/avatars', express.static(AVATAR_DIR));
+
 // ── Routes ──
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/health', (_req, res) => res.json({ status: 'OK' }));
@@ -52,6 +58,7 @@ app.use('/auth',      authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/tasks',     taskRoutes);
 app.use('/',          submissionRoutes); // ← BARU: handle /tasks/:id/submissions & /submissions/:subId/download
+app.use('/',          commentRoutes);    // ← BARU: handle /tasks/:id/comments
 
 // ── Global error handler ──
 app.use((err, req, res, next) => {

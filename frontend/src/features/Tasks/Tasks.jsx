@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiX } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import TaskCard from './components/TaskCard';
@@ -83,6 +83,70 @@ const StatCards = ({ tasks }) => {
 };
 
 // ============================================
+// SEARCH & FILTER BAR
+// ============================================
+const FilterBar = ({
+  search, setSearch,
+  priorityFilter, setPriorityFilter,
+  assigneeFilter, setAssigneeFilter,
+  assigneeOptions,
+  showAssigneeFilter,
+  onReset,
+}) => {
+  const hasActiveFilter = search || priorityFilter !== 'Semua' || assigneeFilter !== 'Semua';
+
+  return (
+    <div className="tasks-filter-bar">
+      <div className="tasks-search-wrap">
+        <FiSearch className="tasks-search-icon" />
+        <input
+          type="text"
+          placeholder="Cari judul..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="tasks-search-input"
+        />
+        {search && (
+          <button className="tasks-search-clear" onClick={() => setSearch('')}>
+            <FiX size={14} />
+          </button>
+        )}
+      </div>
+
+      <select
+        value={priorityFilter}
+        onChange={(e) => setPriorityFilter(e.target.value)}
+        className="tasks-filter-select"
+      >
+        <option value="Semua">Semua Prioritas</option>
+        <option value="Tinggi">Tinggi</option>
+        <option value="Sedang">Sedang</option>
+        <option value="Rendah">Rendah</option>
+      </select>
+
+      {showAssigneeFilter && (
+        <select
+          value={assigneeFilter}
+          onChange={(e) => setAssigneeFilter(e.target.value)}
+          className="tasks-filter-select"
+        >
+          <option value="Semua">Semua Assignee</option>
+          {assigneeOptions.map(name => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+      )}
+
+      {hasActiveFilter && (
+        <button onClick={onReset} className="tasks-filter-reset">
+          <FiX size={13} /> Reset
+        </button>
+      )}
+    </div>
+  );
+};
+
+// ============================================
 // MAIN COMPONENT
 // ============================================
 const Tasks = () => {
@@ -94,6 +158,12 @@ const Tasks = () => {
   const [viewTask, setViewTask]     = useState(null);
   const [editTask, setEditTask]     = useState(null);
   const [revisiTask, setRevisiTask] = useState(null);
+
+  // ── State search & filter ──
+  const [search, setSearch]                 = useState('');
+  const [priorityFilter, setPriorityFilter] = useState('Semua');
+  const [assigneeFilter, setAssigneeFilter] = useState('Semua');
+
   const scrollRef = useRef(null);
   const boardRef  = useRef(null);
 
@@ -109,12 +179,29 @@ const Tasks = () => {
     }
   }, [location.search, tasks]);
 
-  const displayTasks = user.role === 'team'
+  const baseTasks = user.role === 'team'
     ? tasks.filter(t => {
         const assignees = String(t.assignee || '').split(',').map(s => s.trim());
         return assignees.includes(user.username) || assignees.includes('team');
       })
     : tasks;
+
+  // ── Daftar assignee unik untuk dropdown (hanya manager) ──
+  const assigneeOptions = Array.from(
+    new Set(baseTasks.map(t => t.assignee).filter(Boolean))
+  ).sort();
+
+  // ── Terapkan search & filter ──
+  const displayTasks = baseTasks.filter(t => {
+    const matchSearch = search.trim() === '' ||
+      t.title?.toLowerCase().includes(search.trim().toLowerCase());
+
+    const matchPriority = priorityFilter === 'Semua' || t.priority === priorityFilter;
+
+    const matchAssignee = assigneeFilter === 'Semua' || t.assignee === assigneeFilter;
+
+    return matchSearch && matchPriority && matchAssignee;
+  });
 
   const overdueTasks = displayTasks.filter(t =>
     t.status !== 'Selesai' && t.deadline && new Date(t.deadline) < today
@@ -127,6 +214,12 @@ const Tasks = () => {
     { id: 'Dikerjakan', title: 'Dikerjakan', color: 'var(--status-orange)'  },
     { id: 'Selesai',    title: 'Selesai',    color: 'var(--status-green)'   },
   ];
+
+  const handleResetFilter = () => {
+    setSearch('');
+    setPriorityFilter('Semua');
+    setAssigneeFilter('Semua');
+  };
 
   const handleAddSubmit = async (formData) => {
     try {
@@ -179,21 +272,37 @@ const Tasks = () => {
 
   return (
     <div className="pb-10 h-full flex flex-col">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-start mb-4 flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-heading)] mb-1">Papan Tugas</h1>
           <p className="text-sm text-[var(--text-secondary)]">Kelola tugas dengan tampilan board interaktif.</p>
         </div>
-        {user.role === 'manager' && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowModal(true)}
-            className="btn-primary flex items-center gap-2 shadow-[var(--shadow-neumorph)]"
-          >
-            <FiPlus /> Tambah Tugas
-          </motion.button>
-        )}
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* SEARCH & FILTER */}
+          <FilterBar
+            search={search}
+            setSearch={setSearch}
+            priorityFilter={priorityFilter}
+            setPriorityFilter={setPriorityFilter}
+            assigneeFilter={assigneeFilter}
+            setAssigneeFilter={setAssigneeFilter}
+            assigneeOptions={assigneeOptions}
+            showAssigneeFilter={user.role === 'manager'}
+            onReset={handleResetFilter}
+          />
+
+          {user.role === 'manager' && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowModal(true)}
+              className="btn-primary flex items-center gap-2 shadow-[var(--shadow-neumorph)]"
+            >
+              <FiPlus /> Tambah Tugas
+            </motion.button>
+          )}
+        </div>
       </div>
 
       {/* STAT CARDS */}
@@ -238,6 +347,13 @@ const Tasks = () => {
                     ))
                   }
                 </AnimatePresence>
+
+                {displayTasks.filter(t => t.status === col.id && !overdueIds.has(t.id)).length === 0 && (
+                  <div className="task-col-empty">
+                    <span className="task-col-empty-icon">🔍</span>
+                    <span className="task-col-empty-text">Tidak ada tugas yang cocok</span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

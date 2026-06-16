@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiClock, FiUser, FiTrash2, FiCheckCircle, FiPaperclip } from 'react-icons/fi';
+import { FiClock, FiUser, FiTrash2, FiCheckCircle, FiPaperclip, FiAlertTriangle } from 'react-icons/fi';
 import SubmissionModal from './SubmissionModal';
 
 const getPriorityClass = (priority) => {
@@ -11,9 +11,15 @@ const getPriorityClass = (priority) => {
 
 const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView }) => {
   const [showSubmission, setShowSubmission] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const isSelesai = task.status === 'Selesai';
   const showClip  = isSelesai || isOverdue;
+
+  const handleConfirmDelete = () => {
+    onDelete(task.id);
+    setShowDeleteConfirm(false);
+  };
 
   return (
     <>
@@ -53,7 +59,7 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView 
             )}
             {userRole === 'manager' && (
               <button
-                onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}
+                onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
                 className="action-btn-danger"
                 title="Hapus tugas"
               >
@@ -100,6 +106,7 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView 
         )}
       </motion.div>
 
+      {/* MODAL SUBMISSION */}
       <AnimatePresence>
         {showSubmission && (
           <SubmissionModal
@@ -107,6 +114,56 @@ const TaskCard = ({ task, userRole, onUpdateStatus, onDelete, isOverdue, onView 
             userRole={userRole}
             onClose={() => setShowSubmission(false)}
           />
+        )}
+      </AnimatePresence>
+
+      {/* MODAL KONFIRMASI HAPUS */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="modal-card"
+              style={{ maxWidth: '380px', width: '100%', textAlign: 'center' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div style={{
+                width: '48px', height: '48px', borderRadius: '50%',
+                background: 'rgba(248,113,113,0.12)', color: 'var(--status-red)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 14px', fontSize: '22px',
+              }}>
+                <FiAlertTriangle />
+              </div>
+
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-heading)', marginBottom: '8px' }}>
+                Hapus tugas ini?
+              </h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '20px', lineHeight: 1.6 }}>
+                <strong style={{ color: 'var(--text-primary)' }}>{task.title}</strong> akan dihapus secara permanen dan tidak dapat dikembalikan.
+              </p>
+
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1 }}
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="btn-danger"
+                  style={{ flex: 1 }}
+                >
+                  Ya, Hapus
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>

@@ -1,5 +1,6 @@
 const { query } = require('../adapters/mysql');
 const { demoUsers } = require('../data/demo-data');
+const Q = require('../data/auth.queries');
 
 function isRecoverableDbError(error) {
   return [
@@ -29,6 +30,8 @@ function toPublicUser(rawUser) {
     username: rawUser.username,
     name: rawUser.username,
     role: normalizeRole(rawUser.role),
+    avatar: rawUser.avatar || null,
+    createdAt: rawUser.created_at || null,
   };
 }
 
@@ -102,6 +105,73 @@ async function authenticateUser(username, password) {
     : null;
 }
 
+// ======================
+// Get user by id (untuk refresh data profile)
+// ======================
+async function getUserById(userId) {
+  const rows = await query(Q.GET_USER_BY_ID, [userId]);
+  if (!rows.length) {
+    throw Object.assign(new Error('User tidak ditemukan'), { statusCode: 404 });
+  }
+  return toPublicUser(rows[0]);
+}
+
+// ======================
+// Update username / nama lengkap
+// ======================
+async function updateUsername(userId, newUsername) {
+  if (!newUsername || !newUsername.trim()) {
+    throw Object.assign(new Error('Username tidak boleh kosong'), { statusCode: 400 });
+  }
+
+  await query(Q.UPDATE_USERNAME, [newUsername.trim(), userId]);
+  return getUserById(userId);
+}
+
+// ======================
+// Update password
+// ======================
+async function updatePassword(userId, newPassword) {
+  if (!newPassword || newPassword.length < 6) {
+    throw Object.assign(
+      new Error('Password baru minimal 6 karakter'),
+      { statusCode: 400 }
+    );
+  }
+
+  // NOTE: password disimpan plain sesuai pola authenticateUser yang sudah ada
+  // (dbUser.password !== password, tanpa hashing).
+  await query(Q.UPDATE_PASSWORD, [newPassword, userId]);
+  return { message: 'Password berhasil diubah' };
+}
+
+// ======================
+// Update avatar
+// ======================
+async function updateAvatar(userId, filename) {
+  await query(Q.UPDATE_AVATAR, [filename, userId]);
+  return getUserById(userId);
+}
+
+// ======================
+// Hapus avatar
+// ======================
+async function removeAvatar(userId) {
+  await query(Q.REMOVE_AVATAR, [userId]);
+  return getUserById(userId);
+}
+
+async function getAvatarFilename(userId) {
+  const rows = await query(Q.GET_AVATAR_BY_ID, [userId]);
+  return rows[0]?.avatar || null;
+}
+
 module.exports = {
   authenticateUser,
+  getUserById,
+  updateUsername,
+  updatePassword,
+  updateAvatar,
+  removeAvatar,
+  getAvatarFilename,
 };

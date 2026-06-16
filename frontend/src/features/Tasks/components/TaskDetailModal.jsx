@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiUser, FiClock, FiFlag, FiAlertCircle, FiPaperclip, FiCheckCircle } from 'react-icons/fi';
 import SubmissionModal from './SubmissionModal';
+import CommentSection from './CommentSection';
 import { useTasks } from '../../../context/TaskContext';
 
 const getPriorityClass = (priority) => {
@@ -126,7 +127,7 @@ const TaskDetailModal = ({ task, onClose, onEdit, onRevisi, userRole }) => {
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             className="modal-card"
-            style={{ maxWidth: '480px', width: '100%' }}
+            style={{ maxWidth: '480px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* HEADER */}
@@ -202,6 +203,11 @@ const TaskDetailModal = ({ task, onClose, onEdit, onRevisi, userRole }) => {
                 </div>
               </div>
             </div>
+
+            <div className="td-divider" />
+
+            {/* KOMENTAR */}
+            <CommentSection taskId={task.id} userRole={userRole} />
 
             <div className="td-divider" />
 

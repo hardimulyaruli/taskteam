@@ -6,7 +6,7 @@ import { useTasks } from '../../../context/TaskContext';
 import '../../../styles/Dashboard.css';
 
 // ============================================
-// DONUT CHART (canvas native, no library)
+// DONUT CHART
 // ============================================
 const DonutChart = ({ selesai, dikerjakan, todo }) => {
   const canvasRef = useRef(null);
@@ -16,40 +16,39 @@ const DonutChart = ({ selesai, dikerjakan, todo }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    const radius = 44;
-    const lineWidth = 14;
+    const cx = 80, cy = 80, r = 58, lw = 28;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (total === 0) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(128,128,128,0.15)';
-      ctx.lineWidth = lineWidth;
-      ctx.stroke();
-      return;
-    }
+    // Background track
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(128,128,128,0.1)';
+    ctx.lineWidth = lw;
+    ctx.shadowBlur = 0;
+    ctx.stroke();
+
+    if (total === 0) return;
 
     const segments = [
-      { value: selesai,    color: '#4ade80' },
-      { value: dikerjakan, color: '#60a5fa' },
-      { value: todo,       color: '#f87171' },
+      { value: selesai,    color: '#00ea7d' },
+      { value: dikerjakan, color: '#67abff' },
+      { value: todo,       color: '#ee0f38' },
     ];
 
     let startAngle = -Math.PI / 2;
+    ctx.shadowBlur = 16;
     segments.forEach(seg => {
-      if (seg.value === 0) return;
-      const slice = (seg.value / total) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, startAngle, startAngle + slice);
-      ctx.strokeStyle = seg.color;
-      ctx.lineWidth = lineWidth;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-      startAngle += slice + 0.04;
-    });
+  if (seg.value === 0) return;
+  const slice = (seg.value / total) * Math.PI * 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, startAngle, startAngle + slice);
+  ctx.strokeStyle = seg.color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'butt';
+  ctx.stroke();
+  startAngle += slice + 0.02;
+});
   }, [selesai, dikerjakan, todo, total]);
 
   const pct = total > 0 ? Math.round((selesai / total) * 100) : 0;
@@ -57,7 +56,7 @@ const DonutChart = ({ selesai, dikerjakan, todo }) => {
   return (
     <div className="tt-donut-wrap">
       <div className="tt-donut-canvas-wrap">
-        <canvas ref={canvasRef} width={110} height={110} />
+        <canvas ref={canvasRef} width={160} height={160} />
         <div className="tt-donut-center">
           <span className="tt-donut-pct">{pct}%</span>
           <span className="tt-donut-label">selesai</span>
@@ -65,17 +64,17 @@ const DonutChart = ({ selesai, dikerjakan, todo }) => {
       </div>
       <div className="tt-donut-legend">
         <div className="tt-legend-item">
-          <span className="tt-legend-dot" style={{ background: '#4ade80' }} />
+          <span className="tt-legend-dot" style={{ background: '#00ea7d' }} />
           <span>Selesai</span>
           <span className="tt-legend-val">{selesai}</span>
         </div>
         <div className="tt-legend-item">
-          <span className="tt-legend-dot" style={{ background: '#60a5fa' }} />
+          <span className="tt-legend-dot" style={{ background: '#67abff' }} />
           <span>Dikerjakan</span>
           <span className="tt-legend-val">{dikerjakan}</span>
         </div>
         <div className="tt-legend-item">
-          <span className="tt-legend-dot" style={{ background: '#f87171' }} />
+          <span className="tt-legend-dot" style={{ background: '#ee0f38' }} />
           <span>To Do</span>
           <span className="tt-legend-val">{todo}</span>
         </div>
@@ -136,7 +135,8 @@ const WeeklyChart = ({ tasks }) => {
               className="tt-week-bar"
               style={{
                 height: `${Math.round((count / max) * 100)}%`,
-                background: count > 0 ? '#4ade80' : 'rgba(128,128,128,0.15)',
+                background: count > 0 ? '#00ea7d' : 'rgba(128,128,128,0.15)',
+                boxShadow: count > 0 ? '0 0 8px #00ff8866' : 'none',
               }}
               initial={{ height: 0 }}
               animate={{ height: `${Math.round((count / max) * 100)}%` }}
@@ -155,9 +155,9 @@ const WeeklyChart = ({ tasks }) => {
 // ============================================
 const ActivityFeed = ({ activities }) => {
   const iconMap = {
-    memperbarui:  { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa', symbol: '✎' },
-    diselesaikan: { bg: 'rgba(74,222,128,0.15)',  color: '#4ade80', symbol: '✓' },
-    ditambahkan:  { bg: 'rgba(248,113,113,0.15)', color: '#f87171', symbol: '+' },
+    memperbarui:  { bg: 'rgba(56,191,255,0.15)',  color: '#67abff', symbol: '✎' },
+    diselesaikan: { bg: 'rgba(0,255,136,0.15)',   color: '#00ea7d', symbol: '✓' },
+    ditambahkan:  { bg: 'rgba(255,77,109,0.15)',  color: '#ee0f38', symbol: '+' },
   };
 
   if (!activities || activities.length === 0) {
@@ -201,12 +201,10 @@ const TeamDashboard = ({ user }) => {
     t => t.assignee === user.username || t.assignee === 'team'
   );
 
-  // Exclude tugas overdue dari stats biar konsisten sama board
   const overdueTasks = myTasks.filter(t =>
     t.status !== 'Selesai' && t.deadline && new Date(t.deadline) < today
   );
   const overdueIds = new Set(overdueTasks.map(t => t.id));
-
   const activeTasks = myTasks.filter(t => !overdueIds.has(t.id));
 
   const stats = {
@@ -216,7 +214,6 @@ const TeamDashboard = ({ user }) => {
     todo:       activeTasks.filter(t => t.status === 'To Do').length,
   };
 
-  // Tugas prioritas: exclude overdue, ambil yang belum selesai
   const urgentTasks = activeTasks.filter(t => t.status !== 'Selesai').slice(0, 3);
 
   return (
@@ -239,9 +236,9 @@ const TeamDashboard = ({ user }) => {
             todo={stats.todo}
           />
           <div className="tt-progress-section">
-            <ProgressBar label="Selesai"    value={stats.selesai}    total={stats.total} color="#4ade80" />
-            <ProgressBar label="Dikerjakan" value={stats.dikerjakan} total={stats.total} color="#60a5fa" />
-            <ProgressBar label="To Do"      value={stats.todo}       total={stats.total} color="#f87171" />
+            <ProgressBar label="Selesai"    value={stats.selesai}    total={stats.total} color="#00ea7d" />
+            <ProgressBar label="Dikerjakan" value={stats.dikerjakan} total={stats.total} color="#67abff" />
+            <ProgressBar label="To Do"      value={stats.todo}       total={stats.total} color="#ee0f38" />
           </div>
         </motion.div>
 

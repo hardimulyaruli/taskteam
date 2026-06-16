@@ -1,6 +1,6 @@
 import api from './api'
 
-// Upload file(s) ke task tertentu (team only)
+// Upload file
 export function uploadSubmissions(taskId, files) {
   const formData = new FormData()
   Array.from(files).forEach((file) => {
@@ -17,7 +17,7 @@ export function fetchSubmissions(taskId) {
   return api.get(`/tasks/${taskId}/submissions`)
 }
 
-// Download file — pakai axios supaya token JWT ikut terkirim
+// Download file 
 export async function downloadSubmission(subId, originalName) {
   const response = await api.get(`/submissions/${subId}/download`, {
     responseType: 'blob',
@@ -38,7 +38,7 @@ export function deleteSubmission(taskId, subId) {
   return api.delete(`/tasks/${taskId}/submissions/${subId}`)
 }
 
-// Preview file — buka di tab baru tanpa download
+// Preview file 
 export async function previewSubmission(subId, mimetype, originalName) {
   const response = await api.get(`/submissions/${subId}/download`, {
     responseType: 'blob',

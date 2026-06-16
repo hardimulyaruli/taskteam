@@ -3,7 +3,7 @@
    ========================================== */
 
 .profile-page {
-  max-width: 48rem;
+  max-width: 56rem;
   margin: 0 auto;
   padding-bottom: 2.5rem;
 }
@@ -33,7 +33,7 @@
 
 @media (min-width: 768px) {
   .profile-grid {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1.3fr 2fr;
   }
 }
 
@@ -55,6 +55,11 @@
   padding: 1rem;
 }
 
+.profile-avatar-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
 .profile-avatar {
   width: 6rem;
   height: 6rem;
@@ -65,11 +70,59 @@
   font-size: 1.875rem;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 1rem;
   background-color: var(--accent-blue-bg);
   color: var(--accent-blue);
   border: 1px solid var(--border-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-edit-btn {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.profile-avatar-edit-btn:hover {
+  background: var(--bg-hover);
+  color: var(--accent-blue);
+}
+
+.profile-avatar-edit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profile-avatar-error {
+  font-size: 0.7rem;
+  color: var(--status-red);
+  margin-top: 8px;
+}
+
+.spin {
+  animation: profile-spin 1s linear infinite;
+}
+
+@keyframes profile-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .profile-name {
@@ -97,6 +150,33 @@
   border: 1px solid rgba(63, 185, 80, 0.2);
 }
 
+/* Stat mini */
+.profile-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.profile-stat-box {
+  text-align: center;
+  border-radius: 0.625rem;
+  padding: 0.75rem;
+  background-color: var(--bg-hover);
+}
+
+.profile-stat-num {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.profile-stat-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
 .profile-joined {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
@@ -104,6 +184,9 @@
   font-size: 0.75rem;
   color: var(--text-secondary);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ProfileForm */
@@ -170,6 +253,67 @@
   margin-bottom: 1.25rem;
 }
 
+/* Theme toggle */
+.theme-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-toggle-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.theme-toggle-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-heading);
+}
+
+.theme-toggle-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.theme-toggle-pill {
+  width: 44px;
+  height: 24px;
+  border-radius: 99px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.theme-toggle-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--accent-blue);
+}
+
 /* ==========================================
    Light-mode profile overrides (targeted only)
    ========================================== */
@@ -193,6 +337,10 @@ html:not(.dark) .profile-role-badge {
   border-color: rgba(21, 128, 61, 0.2);
 }
 
+html:not(.dark) .profile-avatar-edit-btn {
+  border-color: #e4e9f0;
+}
+
 html:not(.dark) .profile-form-card {
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
@@ -200,6 +348,9 @@ html:not(.dark) .profile-form-card {
   border-color: #e4e9f0;
 }
 
+html:not(.dark) .profile-stat-box {
+  background-color: #f1f5f9;
+}
 
 .alert-success {
   padding: 0.75rem;
@@ -220,4 +371,26 @@ html:not(.dark) .profile-form-card {
   font-weight: 500;
   background-color: var(--status-red-bg);
   color: var(--status-red);
+}
+
+.profile-avatar-remove-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: var(--status-red);
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  padding: 2px 4px;
+}
+
+.profile-avatar-remove-btn:hover {
+  text-decoration: underline;
+}
+
+.profile-avatar-remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -475,6 +475,8 @@ html:not(.dark) .tt-week-count      { color: #16a34a; }
 .tt-donut-canvas-wrap {
   position: relative;
   flex-shrink: 0;
+  width: 160px;
+  height: 160px;
 }
 
 .tt-donut-center {
@@ -487,17 +489,18 @@ html:not(.dark) .tt-week-count      { color: #16a34a; }
   pointer-events: none;
 }
 
+/* ── DIUPDATE: lebih besar & lega ── */
 .tt-donut-pct {
-  font-size: 1.2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   line-height: 1;
   color: var(--text-heading);
 }
 
 .tt-donut-label {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   color: var(--text-secondary);
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .tt-donut-legend {
@@ -632,7 +635,7 @@ html:not(.dark) .tt-week-count      { color: #16a34a; }
 .tt-week-count {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #4ade80;
+  color: #00ff88;
   line-height: 1;
 }
 
@@ -685,9 +688,9 @@ html:not(.dark) .tt-week-count {
   font-weight: 500;
 }
 
-.tt-status-selesai    { background: rgba(74,222,128,0.15);  color: #4ade80; }
-.tt-status-dikerjakan { background: rgba(96,165,250,0.15);  color: #60a5fa; }
-.tt-status-to-do      { background: rgba(248,113,113,0.15); color: #f87171; }
+.tt-status-selesai    { background: rgba(0,255,136,0.15);  color: #00ff88; }
+.tt-status-dikerjakan { background: rgba(56,191,255,0.15); color: #38bfff; }
+.tt-status-to-do      { background: rgba(255,77,109,0.15); color: #ff4d6d; }
 
 html:not(.dark) .tt-status-selesai    { background: #dcfce7; color: #16a34a; }
 html:not(.dark) .tt-status-dikerjakan { background: #dbeafe; color: #1d4ed8; }
