@@ -77,6 +77,42 @@ async function lookupUserId(username, conn) {
   return rows[0].id;
 }
 
+async function getAllTeamUserIds(conn) {
+  const rows = conn
+    ? (await conn.execute(Q.GET_ALL_TEAM_USER_IDS))[0]
+    : await query(Q.GET_ALL_TEAM_USER_IDS);
+
+  return rows.map(r => r.id);
+}
+
+async function getTeamMembers() {
+  const rows = await query(Q.LIST_TEAM_MEMBERS);
+  return rows.map(r => ({ id: r.id, username: r.username }));
+}
+
+// ======================
+// Assign helper — handle broadcast 'team' vs single user
+// ======================
+
+async function assignTask(taskId, assigneeValue, conn) {
+  if (!assigneeValue) return;
+
+  if (assigneeValue === 'team') {
+    // Broadcast ke SEMUA user dengan role team
+    const teamUserIds = await getAllTeamUserIds(conn);
+    for (const userId of teamUserIds) {
+      await conn.execute(Q.INSERT_ASSIGNMENT, [taskId, userId]);
+    }
+    return;
+  }
+
+  // Single user spesifik
+  const assigneeId = await lookupUserId(assigneeValue, conn);
+  if (assigneeId) {
+    await conn.execute(Q.INSERT_ASSIGNMENT, [taskId, assigneeId]);
+  }
+}
+
 // ======================
 // Get semua task
 // ======================
@@ -135,10 +171,7 @@ async function createTask(data, currentUser) {
       data.deadline || null,
     ]);
 
-    const assigneeId = await lookupUserId(data.assignee, conn);
-    if (assigneeId) {
-      await conn.execute(Q.INSERT_ASSIGNMENT, [taskId, assigneeId]);
-    }
+    await assignTask(taskId, data.assignee, conn);
   });
 
   return await getTaskById(taskId, currentUser);
@@ -169,7 +202,6 @@ async function updateTask(taskId, data, currentUser) {
       ? await lookupPriorityId(data.priority, conn)
       : current.priority_id;
 
-    // isRevisi: kalau dikirim true set 1, kalau false set 0, kalau tidak dikirim pakai nilai lama
     const isRevisi = data.isRevisi !== undefined
       ? (data.isRevisi ? 1 : 0)
       : current.is_revisi;
@@ -183,6 +215,11 @@ async function updateTask(taskId, data, currentUser) {
       isRevisi,
       taskId,
     ]);
+
+    if (data.assignee !== undefined) {
+      await conn.execute(Q.DELETE_ASSIGNMENTS, [taskId]);
+      await assignTask(taskId, data.assignee, conn);
+    }
   });
 
   return await getTaskById(taskId, currentUser);
@@ -216,4 +253,5 @@ module.exports = {
   updateTask,
   updateTaskStatus,
   deleteTask,
+  getTeamMembers,
 };

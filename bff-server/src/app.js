@@ -7,8 +7,9 @@ const fs = require('fs');
 const authRoutes       = require('./routes/auth.routes');
 const dashboardRoutes  = require('./routes/dashboard.routes');
 const taskRoutes       = require('./routes/task.routes');
-const submissionRoutes = require('./routes/submission.routes'); // ← BARU
-const commentRoutes    = require('./routes/comment.routes');    // ← BARU
+const submissionRoutes = require('./routes/submission.routes');
+const commentRoutes    = require('./routes/comment.routes');
+const adminRoutes      = require('./routes/admin.routes');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../swagger.yaml'));
@@ -57,8 +58,9 @@ app.get('/health', (_req, res) => res.json({ status: 'OK' }));
 app.use('/auth',      authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/tasks',     taskRoutes);
-app.use('/',          submissionRoutes); // ← BARU: handle /tasks/:id/submissions & /submissions/:subId/download
-app.use('/',          commentRoutes);    // ← BARU: handle /tasks/:id/comments
+app.use('/',          submissionRoutes);
+app.use('/',          commentRoutes);
+app.use('/admin',     adminRoutes);
 
 // ── Global error handler ──
 app.use((err, req, res, next) => {

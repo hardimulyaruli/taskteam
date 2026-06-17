@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiCamera, FiCalendar, FiLoader, FiTrash2, FiAlertTriangle, FiX } from 'react-icons/fi';
+import { FiCamera, FiCalendar, FiLoader, FiTrash2, FiAlertTriangle, FiEdit2, FiUpload } from 'react-icons/fi';
 import { useAuth } from '../../../context/AuthContext';
 import { useTasks } from '../../../context/TaskContext';
 import api from '../../../services/api';
@@ -11,10 +11,12 @@ const ProfileCard = ({ user }) => {
   const { uploadAvatar, deleteAvatar } = useAuth();
   const { tasks } = useTasks();
   const fileInputRef = useRef(null);
+  const menuRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showEditMenu, setShowEditMenu] = useState(false);
 
   // ── Hitung stat mini ──
   const myTasks = user?.role === 'team'
@@ -29,7 +31,21 @@ const ProfileCard = ({ user }) => {
 
   const avatarUrl = user?.avatar ? `${AVATAR_BASE}/uploads/avatars/${user.avatar}` : null;
 
+  // ── Tutup menu kalau klik di luar ──
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowEditMenu(false);
+      }
+    }
+    if (showEditMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showEditMenu]);
+
   const handleAvatarClick = () => {
+    setShowEditMenu(false);
     fileInputRef.current?.click();
   };
 
@@ -78,33 +94,57 @@ const ProfileCard = ({ user }) => {
                 user?.name?.charAt(0)
               )}
             </div>
-            <button
-              type="button"
-              onClick={handleAvatarClick}
-              disabled={isUploading}
-              className="profile-avatar-edit-btn"
-              title="Ganti foto profil"
-            >
-              {isUploading ? <FiLoader className="spin" size={13} /> : <FiCamera size={13} />}
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              style={{ display: 'none' }}
-              onChange={handleAvatarChange}
-            />
+            {isUploading && (
+              <div className="profile-avatar-loading">
+                <FiLoader className="spin" size={18} />
+              </div>
+            )}
           </div>
 
-          {avatarUrl && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            style={{ display: 'none' }}
+            onChange={handleAvatarChange}
+          />
+
+          {/* TOMBOL EDIT FOTO + MENU DROPDOWN */}
+          <div className="profile-edit-menu-wrap" ref={menuRef}>
             <button
               type="button"
-              onClick={() => setShowDeleteConfirm(true)}
-              className="profile-avatar-remove-btn"
+              onClick={() => setShowEditMenu(prev => !prev)}
+              disabled={isUploading}
+              className="profile-edit-trigger-btn"
             >
-              <FiTrash2 size={12} /> Hapus Foto
+              <FiEdit2 size={11} /> Edit Foto
             </button>
-          )}
+
+            <AnimatePresence>
+              {showEditMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                  className="profile-edit-dropdown"
+                >
+                  <button type="button" onClick={handleAvatarClick} className="profile-edit-dropdown-item">
+                    <FiUpload size={13} /> Ganti Foto
+                  </button>
+                  {avatarUrl && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowEditMenu(false); setShowDeleteConfirm(true); }}
+                      className="profile-edit-dropdown-item profile-edit-dropdown-item-danger"
+                    >
+                      <FiTrash2 size={13} /> Hapus Foto
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <h3 className="profile-name">{user?.name}</h3>
           <p className="profile-username">@{user?.username}</p>

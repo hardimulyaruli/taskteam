@@ -10,6 +10,15 @@ async function list(req, res, next) {
   }
 }
 
+async function teamMembers(req, res, next) {
+  try {
+    const members = await taskService.getTeamMembers();
+    return res.status(200).json({ members });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 async function detail(req, res, next) {
   try {
     const task = await taskService.getTaskById(req.params.id, req.user);
@@ -104,6 +113,7 @@ async function remove(req, res, next) {
 
 module.exports = {
   list,
+  teamMembers,
   detail,
   create,
   update,

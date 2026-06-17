@@ -394,3 +394,81 @@ html:not(.dark) .profile-stat-box {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ── Edit Foto Menu ── */
+.profile-edit-menu-wrap {
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.profile-edit-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--accent-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 6px;
+}
+
+.profile-edit-trigger-btn:hover {
+  text-decoration: underline;
+}
+
+.profile-edit-trigger-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.profile-edit-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  z-index: 20;
+}
+
+.profile-edit-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  padding: 7px 10px;
+  border-radius: 0.375rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.profile-edit-dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.profile-edit-dropdown-item-danger {
+  color: var(--status-red);
+}
+
+.profile-avatar-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}

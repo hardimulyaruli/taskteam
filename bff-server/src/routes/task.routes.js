@@ -8,6 +8,9 @@ const router = express.Router();
 // All task routes require authentication
 router.use(authenticate);
 
+// GET  /tasks/team-members — List user role team (untuk dropdown assignee, manager only)
+router.get('/team-members', authorize('manager'), taskCtrl.teamMembers);
+
 // GET  /tasks       — List all tasks (all roles, filtered by role in service)
 router.get('/', taskCtrl.list);
 

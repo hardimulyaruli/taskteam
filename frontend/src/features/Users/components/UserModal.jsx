@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { FiAlertCircle } from 'react-icons/fi';
 import { useUsers } from '../../../context/UserContext';
 
 const UserModal = ({ onClose, editUser }) => {
@@ -9,15 +10,19 @@ const UserModal = ({ onClose, editUser }) => {
   const [formData, setFormData] = useState({
     name: '',
     username: '',
+    password: '',
     role: 'team',
     status: 'Aktif',
   });
+  const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (editUser) {
       setFormData({
         name:     editUser.name     || '',
         username: editUser.username || '',
+        password: '',
         role:     editUser.role     || 'team',
         status:   editUser.status   || 'Aktif',
       });
@@ -28,14 +33,32 @@ const UserModal = ({ onClose, editUser }) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEdit) {
-      updateUser(editUser.id, formData);
-    } else {
-      addUser(formData);
+    setError('');
+
+    if (!isEdit && (!formData.password || formData.password.length < 6)) {
+      setError('Password minimal 6 karakter.');
+      return;
     }
-    onClose();
+    if (formData.password && formData.password.length > 0 && formData.password.length < 6) {
+      setError('Password minimal 6 karakter.');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      if (isEdit) {
+        await updateUser(editUser.id, formData);
+      } else {
+        await addUser(formData);
+      }
+      onClose();
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Gagal menyimpan user.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -70,6 +93,19 @@ const UserModal = ({ onClose, editUser }) => {
               onChange={handleChange('username')}
             />
           </div>
+          <div className="form-group">
+            <label className="form-label">
+              Password {isEdit ? '(kosongkan jika tidak ingin mengubah)' : ''}
+            </label>
+            <input
+              type="password"
+              className="input-field"
+              value={formData.password}
+              onChange={handleChange('password')}
+              placeholder={isEdit ? '••••••••' : 'Minimal 6 karakter'}
+              required={!isEdit}
+            />
+          </div>
           <div className="form-grid-2">
             <div className="form-group">
               <label className="form-label">Role</label>
@@ -95,12 +131,19 @@ const UserModal = ({ onClose, editUser }) => {
               </select>
             </div>
           </div>
+
+          {error && (
+            <div className="alert-error" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FiAlertCircle size={14} /> {error}
+            </div>
+          )}
+
           <div className="modal-actions">
-            <button type="button" onClick={onClose} className="btn-secondary">
+            <button type="button" onClick={onClose} className="btn-secondary" disabled={isSaving}>
               Batal
             </button>
-            <button type="submit" className="btn-primary">
-              {isEdit ? 'Simpan Perubahan' : 'Simpan User'}
+            <button type="submit" className="btn-primary" disabled={isSaving}>
+              {isSaving ? 'Menyimpan...' : (isEdit ? 'Simpan Perubahan' : 'Simpan User')}
             </button>
           </div>
         </form>

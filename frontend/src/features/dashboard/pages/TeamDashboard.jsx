@@ -275,7 +275,7 @@ const TeamDashboard = ({ user }) => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bento-card"
+          className="bento-card bento-col-span-2"
         >
           <h3 className="stat-card-label">Aktivitas Terbaru</h3>
           <ActivityFeed activities={activities} />
@@ -286,7 +286,7 @@ const TeamDashboard = ({ user }) => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bento-card"
+          className="bento-card bento-col-span-2"
         >
           <div className="tt-week-header">
             <h3 className="stat-card-label">Selesai Minggu Ini</h3>

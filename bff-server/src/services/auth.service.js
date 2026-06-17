@@ -57,6 +57,7 @@ async function authenticateUser(username, password) {
       u.id,
       u.username,
       u.password_hash,
+      u.is_active,
       r.name AS role
 
       FROM users u
@@ -68,6 +69,7 @@ async function authenticateUser(username, password) {
       ON r.id = ur.role_id
 
       WHERE u.username = ?
+      AND u.deleted_at IS NULL
 
       LIMIT 1
     `,[username]);
@@ -77,6 +79,10 @@ async function authenticateUser(username, password) {
       : null;
 
     if (!dbUser) {
+      return null;
+    }
+
+    if (rows[0].is_active === 0) {
       return null;
     }
 
