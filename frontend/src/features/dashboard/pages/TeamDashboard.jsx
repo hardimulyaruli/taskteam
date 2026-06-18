@@ -198,7 +198,10 @@ const TeamDashboard = ({ user }) => {
   const today = new Date();
 
   const myTasks = tasks.filter(
-    t => t.assignee === user.username || t.assignee === 'team'
+    t => {
+      const assignees = String(t.assignee || '').split(',').map(s => s.trim().toLowerCase());
+      return assignees.includes(user.username.toLowerCase()) || assignees.includes('team');
+    }
   );
 
   const overdueTasks = myTasks.filter(t =>

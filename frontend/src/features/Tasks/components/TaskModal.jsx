@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import api from '../../../services/api';
 
 const formatDateForInput = (date) => {
   if (!date) return '';
@@ -17,12 +18,31 @@ const TaskModal = ({ onClose, onSubmit, task, isRevisiMode }) => {
     status: 'To Do'
   });
 
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [isLoadingMembers, setIsLoadingMembers] = useState(true);
+
+  // ── Ambil daftar user role team dari database (bukan hardcode) ──
+  useEffect(() => {
+    let isMounted = true;
+    api.get('/tasks/team-members')
+      .then(res => {
+        if (isMounted) setTeamMembers(res.data?.members || []);
+      })
+      .catch(() => {
+        if (isMounted) setTeamMembers([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingMembers(false);
+      });
+    return () => { isMounted = false; };
+  }, []);
+
   useEffect(() => {
     if (task) {
       setFormData({
         title: task.title || '',
         description: task.description || '',
-        assignee: task.assignee || 'team',
+        assignee: (task.assignee || '').toLowerCase() === 'team' ? 'team' : (task.assignee || 'team'),
         deadline: formatDateForInput(task.deadline),
         priority: task.priority || 'Sedang',
         status: isRevisiMode ? 'Dikerjakan' : (task.status || 'To Do')
@@ -97,11 +117,14 @@ const TaskModal = ({ onClose, onSubmit, task, isRevisiMode }) => {
                     className="input-field"
                     value={formData.assignee}
                     onChange={handleChange('assignee')}
+                    disabled={isLoadingMembers}
                   >
                     <option value="team">Seluruh Team</option>
-                    <option value="hanif">Hanif</option>
-                    <option value="veliana">Veliana</option>
-                    <option value="rina">Rina</option>
+                    {teamMembers.map(member => (
+                      <option key={member.id} value={member.username}>
+                        {member.username}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">

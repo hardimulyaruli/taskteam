@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { query } = require('../adapters/mysql');
 const { demoUsers } = require('../data/demo-data');
 const Q = require('../data/auth.queries');
@@ -172,6 +173,83 @@ async function getAvatarFilename(userId) {
   return rows[0]?.avatar || null;
 }
 
+// ======================
+// Generate kode reset 6 digit (mudah diketik manual untuk demo)
+// ======================
+function generateResetCode() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function hashCode(code) {
+  return crypto.createHash('sha256').update(code).digest('hex');
+}
+
+// ======================
+// Request reset password — HANYA untuk role admin
+// ======================
+async function requestPasswordReset(username) {
+  if (!username || !username.trim()) {
+    throw Object.assign(new Error('Username tidak boleh kosong'), { statusCode: 400 });
+  }
+
+  const rows = await query(Q.GET_ADMIN_USER_BY_USERNAME, [username.trim()]);
+
+  if (!rows.length) {
+    throw Object.assign(
+      new Error('Username tidak ditemukan atau bukan akun Admin. Silakan hubungi Admin lain untuk reset password.'),
+      { statusCode: 404 }
+    );
+  }
+
+  const adminUser = rows[0];
+  const code = generateResetCode();
+  const tokenHash = hashCode(code);
+  const tokenId = crypto.randomUUID();
+
+  // Berlaku 15 menit
+  const expiredAt = new Date(Date.now() + 15 * 60 * 1000);
+
+  await query(Q.INSERT_RESET_TOKEN, [tokenId, adminUser.id, tokenHash, expiredAt]);
+
+  // NOTE: Di aplikasi nyata, 'code' ini dikirim lewat email.
+  // Untuk keperluan demo tanpa server email, kode ditampilkan langsung ke pengguna.
+  return { code, username: adminUser.username };
+}
+
+// ======================
+// Reset password menggunakan kode
+// ======================
+async function resetPasswordWithToken(code, newPassword) {
+  if (!code || !code.trim()) {
+    throw Object.assign(new Error('Kode reset tidak boleh kosong'), { statusCode: 400 });
+  }
+  if (!newPassword || newPassword.length < 6) {
+    throw Object.assign(new Error('Password baru minimal 6 karakter'), { statusCode: 400 });
+  }
+
+  const tokenHash = hashCode(code.trim());
+  const rows = await query(Q.GET_VALID_RESET_TOKEN, [tokenHash]);
+
+  if (!rows.length) {
+    throw Object.assign(new Error('Kode reset tidak valid'), { statusCode: 400 });
+  }
+
+  const tokenRow = rows[0];
+
+  if (tokenRow.used_at) {
+    throw Object.assign(new Error('Kode reset sudah digunakan'), { statusCode: 400 });
+  }
+
+  if (new Date(tokenRow.expired_at) < new Date()) {
+    throw Object.assign(new Error('Kode reset sudah kedaluwarsa'), { statusCode: 400 });
+  }
+
+  await query(Q.UPDATE_PASSWORD, [newPassword, tokenRow.user_id]);
+  await query(Q.MARK_TOKEN_USED, [tokenRow.id]);
+
+  return { message: 'Password berhasil direset. Silakan login dengan password baru.' };
+}
+
 module.exports = {
   authenticateUser,
   getUserById,
@@ -180,4 +258,6 @@ module.exports = {
   updateAvatar,
   removeAvatar,
   getAvatarFilename,
+  requestPasswordReset,
+  resetPasswordWithToken,
 };

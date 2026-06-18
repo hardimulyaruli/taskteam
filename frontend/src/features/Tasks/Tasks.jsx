@@ -181,8 +181,8 @@ const Tasks = () => {
 
   const baseTasks = user.role === 'team'
     ? tasks.filter(t => {
-        const assignees = String(t.assignee || '').split(',').map(s => s.trim());
-        return assignees.includes(user.username) || assignees.includes('team');
+        const assignees = String(t.assignee || '').split(',').map(s => s.trim().toLowerCase());
+        return assignees.includes(user.username.toLowerCase()) || assignees.includes('team');
       })
     : tasks;
 

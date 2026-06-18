@@ -29,7 +29,7 @@ const LIST_TASKS = `
   ORDER BY t.created_at DESC
 `;
 
-// ── List tasks assigned to a specific user (langsung ATAU lewat broadcast 'team') ──
+// ── List tasks assigned to a specific user ──
 const LIST_TASKS_BY_ASSIGNEE = `
   SELECT
     t.id,
@@ -47,7 +47,7 @@ const LIST_TASKS_BY_ASSIGNEE = `
   FROM tasks t
   INNER JOIN task_statuses    ts ON ts.id = t.status_id
   INNER JOIN task_priorities  tp ON tp.id = t.priority_id
-  INNER JOIN task_assignments ta2 ON ta2.task_id = t.id AND ta2.user_id = ?
+  INNER JOIN task_assignments ta2 ON ta2.task_id = t.id AND (ta2.user_id = ? OR ta2.user_id = (SELECT id FROM users WHERE username = 'team' OR username = 'Team' LIMIT 1))
   LEFT  JOIN task_assignments ta ON ta.task_id = t.id
   LEFT  JOIN users            u2 ON u2.id = ta.user_id
   WHERE t.deleted_at IS NULL
@@ -61,6 +61,8 @@ const GET_TASK_BY_ID = `
     t.id,
     t.title,
     t.description,
+    t.status_id,
+    t.priority_id,
     ts.name   AS status,
     tp.name   AS priority,
     tp.color  AS priority_color,

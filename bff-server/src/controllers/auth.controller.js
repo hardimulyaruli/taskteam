@@ -7,6 +7,8 @@ const {
   updateAvatar,
   removeAvatar,
   getAvatarFilename,
+  requestPasswordReset,
+  resetPasswordWithToken,
 } = require('../services/auth.service');
 const { createToken } = require('../utils/token');
 const fs = require('fs');
@@ -35,7 +37,6 @@ async function login(req, res, next) {
 
 // ======================
 // GET /auth/me
-// Ambil data profile terbaru (termasuk avatar)
 // ======================
 async function getMe(req, res, next) {
   try {
@@ -51,7 +52,6 @@ async function getMe(req, res, next) {
 
 // ======================
 // PUT /auth/profile
-// Update nama lengkap / username
 // ======================
 async function updateProfile(req, res, next) {
   try {
@@ -68,7 +68,6 @@ async function updateProfile(req, res, next) {
 
 // ======================
 // PUT /auth/password
-// Update password
 // ======================
 async function changePassword(req, res, next) {
   try {
@@ -85,7 +84,6 @@ async function changePassword(req, res, next) {
 
 // ======================
 // POST /auth/avatar
-// Upload / ganti foto profil
 // ======================
 async function uploadAvatar(req, res, next) {
   try {
@@ -93,7 +91,6 @@ async function uploadAvatar(req, res, next) {
       return res.status(400).json({ message: 'Tidak ada file yang diupload' });
     }
 
-    // Hapus avatar lama jika ada
     const oldAvatar = await getAvatarFilename(req.user.id);
     if (oldAvatar) {
       const oldPath = path.join(AVATAR_DIR, oldAvatar);
@@ -112,7 +109,6 @@ async function uploadAvatar(req, res, next) {
 
 // ======================
 // DELETE /auth/avatar
-// Hapus foto profil
 // ======================
 async function deleteAvatar(req, res, next) {
   try {
@@ -132,6 +128,39 @@ async function deleteAvatar(req, res, next) {
   }
 }
 
+// ======================
+// POST /auth/forgot-password
+// Hanya berlaku untuk username dengan role admin
+// ======================
+async function forgotPassword(req, res, next) {
+  try {
+    const { username } = req.body;
+    const result = await requestPasswordReset(username);
+    return res.status(200).json(result);
+  } catch (err) {
+    if (err.statusCode) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
+// ======================
+// POST /auth/reset-password
+// ======================
+async function resetPassword(req, res, next) {
+  try {
+    const { code, password } = req.body;
+    const result = await resetPasswordWithToken(code, password);
+    return res.status(200).json(result);
+  } catch (err) {
+    if (err.statusCode) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
 module.exports = {
   login,
   getMe,
@@ -139,4 +168,6 @@ module.exports = {
   changePassword,
   uploadAvatar,
   deleteAvatar,
+  forgotPassword,
+  resetPassword,
 };

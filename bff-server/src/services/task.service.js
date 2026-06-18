@@ -98,10 +98,9 @@ async function assignTask(taskId, assigneeValue, conn) {
   if (!assigneeValue) return;
 
   if (assigneeValue === 'team') {
-    // Broadcast ke SEMUA user dengan role team
-    const teamUserIds = await getAllTeamUserIds(conn);
-    for (const userId of teamUserIds) {
-      await conn.execute(Q.INSERT_ASSIGNMENT, [taskId, userId]);
+    const teamUserId = await lookupUserId('team', conn) || await lookupUserId('Team', conn);
+    if (teamUserId) {
+      await conn.execute(Q.INSERT_ASSIGNMENT, [taskId, teamUserId]);
     }
     return;
   }

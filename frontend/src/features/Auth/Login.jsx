@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FiZap, FiCheck, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
@@ -82,6 +82,15 @@ const Login = () => {
             }
           </button>
         </form>
+
+        <div style={{ textAlign: 'center', marginTop: '12px' }}>
+          <Link
+            to="/forgot-password"
+            style={{ fontSize: '0.82rem', color: 'var(--accent-blue)', textDecoration: 'none' }}
+          >
+            Lupa Password?
+          </Link>
+        </div>
 
         <div className="login-footer">
           <FiCheck className="icon-sm login-footer-icon" />

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import DashboardLayout from './components/layout/DashboardLayout'
 import Login from './features/Auth/Login'
+import ForgotPassword from './features/Auth/ForgotPassword'
 import Dashboard from './features/dashboard/Dashboard'
 import Tasks from './features/Tasks/Tasks'
 import UsersPage from './features/Users/pages/UsersPage'
@@ -20,6 +21,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />

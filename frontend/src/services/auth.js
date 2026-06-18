@@ -33,3 +33,13 @@ export function uploadAvatarRequest(file) {
 export function deleteAvatarRequest() {
   return api.delete('/auth/avatar')
 }
+
+// Minta kode reset password (khusus admin)
+export function forgotPasswordRequest(username) {
+  return api.post('/auth/forgot-password', { username })
+}
+
+// Reset password menggunakan kode
+export function resetPasswordRequest(code, password) {
+  return api.post('/auth/reset-password', { code, password })
+}

@@ -1,11 +1,24 @@
 const express = require('express');
-const { login, getMe, updateProfile, changePassword, uploadAvatar, deleteAvatar } = require('../controllers/auth.controller');
+const {
+  login,
+  getMe,
+  updateProfile,
+  changePassword,
+  uploadAvatar,
+  deleteAvatar,
+  forgotPassword,
+  resetPassword,
+} = require('../controllers/auth.controller');
 const { authenticate } = require('../middleware/authenticate');
 const { avatarUpload, handleAvatarUploadError } = require('../middleware/avatarUpload');
 
 const router = express.Router();
 
 router.post('/login', login);
+
+// ── Reset password (publik, tanpa login) ──
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 // Semua route di bawah butuh login
 router.get('/me', authenticate, getMe);
