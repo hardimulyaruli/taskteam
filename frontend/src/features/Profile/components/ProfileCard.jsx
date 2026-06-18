@@ -18,7 +18,7 @@ const ProfileCard = ({ user }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showEditMenu, setShowEditMenu] = useState(false);
 
-  // ── Hitung stat mini ──
+  // Hitung stat mini 
   const myTasks = user?.role === 'team'
     ? tasks.filter(t => {
         const assignees = String(t.assignee || '').split(',').map(s => s.trim());
@@ -31,7 +31,7 @@ const ProfileCard = ({ user }) => {
 
   const avatarUrl = user?.avatar ? `${AVATAR_BASE}/uploads/avatars/${user.avatar}` : null;
 
-  // ── Tutup menu kalau klik di luar ──
+  // Tutup menu kalau klik di luar 
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {

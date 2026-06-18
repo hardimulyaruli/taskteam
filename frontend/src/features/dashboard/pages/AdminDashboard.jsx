@@ -4,9 +4,7 @@ import { useTasks } from '../../../context/TaskContext';
 import { useUsers } from '../../../context/UserContext';
 import '../../../styles/Dashboard.css';
 
-// ============================================
 // DASHBOARD BANNER
-// ============================================
 const DashboardBanner = ({ user }) => {
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -28,9 +26,7 @@ const DashboardBanner = ({ user }) => {
   );
 };
 
-// ============================================
 // STAT CARD
-// ============================================
 const StatCard = ({ label, value, sub, index, accent }) => {
   return (
     <motion.div
@@ -47,9 +43,7 @@ const StatCard = ({ label, value, sub, index, accent }) => {
   );
 };
 
-// ============================================
 // USER LIST
-// ============================================
 const UserList = ({ users }) => {
   const roleColor = {
     admin:   { bg: 'rgba(248,113,113,0.12)', color: '#f87171' },
@@ -106,9 +100,7 @@ const UserList = ({ users }) => {
   );
 };
 
-// ============================================
 // RECENT ACTIVITIES
-// ============================================
 const RecentActivities = ({ activities }) => {
   const iconMap = {
     memperbarui:  { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa', symbol: '✎' },
@@ -148,9 +140,7 @@ const RecentActivities = ({ activities }) => {
   );
 };
 
-// ============================================
 // MAIN COMPONENT
-// ============================================
 const AdminDashboard = ({ user }) => {
   const { activities } = useTasks();
   const { users } = useUsers();

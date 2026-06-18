@@ -2,10 +2,7 @@ const path = require('path');
 const submissionService = require('../services/submission.service');
 const { UPLOAD_DIR } = require('../middleware/upload');
 
-// ======================
-// POST /tasks/:id/submissions
-// Upload file (team only)
-// ======================
+// Upload file 
 async function upload(req, res, next) {
   try {
     const submissions = await submissionService.uploadSubmissions(
@@ -31,10 +28,7 @@ async function upload(req, res, next) {
   }
 }
 
-// ======================
-// GET /tasks/:id/submissions
-// List submissions (team + manager)
-// ======================
+// List submissions
 async function list(req, res, next) {
   try {
     const submissions = await submissionService.getSubmissions(req.params.id, req.user);
@@ -47,10 +41,7 @@ async function list(req, res, next) {
   }
 }
 
-// ======================
-// GET /submissions/:subId/download
 // Download file
-// ======================
 async function download(req, res, next) {
   try {
     const sub = await submissionService.getSubmissionById(req.params.subId);
@@ -72,10 +63,7 @@ async function download(req, res, next) {
   }
 }
 
-// ======================
-// DELETE /tasks/:id/submissions/:subId
-// Hapus submission (manager atau pemilik)
-// ======================
+// Hapus submission
 async function remove(req, res, next) {
   try {
     const result = await submissionService.deleteSubmission(req.params.subId, req.user);

@@ -5,9 +5,7 @@ import StatCard from '../components/StatCard';
 import { useTasks } from '../../../context/TaskContext';
 import '../../../styles/Dashboard.css';
 
-// ============================================
 // DONUT CHART
-// ============================================
 const DonutChart = ({ selesai, dikerjakan, todo }) => {
   const canvasRef = useRef(null);
   const total = selesai + dikerjakan + todo;
@@ -83,9 +81,7 @@ const DonutChart = ({ selesai, dikerjakan, todo }) => {
   );
 };
 
-// ============================================
 // PROGRESS BAR
-// ============================================
 const ProgressBar = ({ label, value, total, color }) => {
   const pct = total > 0 ? Math.round((value / total) * 100) : 0;
   return (
@@ -107,9 +103,7 @@ const ProgressBar = ({ label, value, total, color }) => {
   );
 };
 
-// ============================================
 // WEEKLY BAR CHART
-// ============================================
 const WeeklyChart = ({ tasks }) => {
   const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
 
@@ -150,9 +144,7 @@ const WeeklyChart = ({ tasks }) => {
   );
 };
 
-// ============================================
 // ACTIVITY FEED
-// ============================================
 const ActivityFeed = ({ activities }) => {
   const iconMap = {
     memperbarui:  { bg: 'rgba(56,191,255,0.15)',  color: '#67abff', symbol: '✎' },
@@ -190,9 +182,7 @@ const ActivityFeed = ({ activities }) => {
   );
 };
 
-// ============================================
 // MAIN COMPONENT
-// ============================================
 const TeamDashboard = ({ user }) => {
   const { tasks, activities } = useTasks();
   const today = new Date();

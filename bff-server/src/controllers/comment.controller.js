@@ -1,9 +1,6 @@
 const commentService = require('../services/comment.service');
 
-// ======================
-// GET /tasks/:id/comments
-// List komentar (team + manager)
-// ======================
+// List komentar
 async function list(req, res, next) {
   try {
     const comments = await commentService.getComments(req.params.id, req.user);
@@ -16,10 +13,7 @@ async function list(req, res, next) {
   }
 }
 
-// ======================
-// POST /tasks/:id/comments
-// Tambah komentar (team + manager)
-// ======================
+// Tambah komentar 
 async function create(req, res, next) {
   try {
     const comment = await commentService.addComment(
@@ -36,10 +30,7 @@ async function create(req, res, next) {
   }
 }
 
-// ======================
-// DELETE /tasks/:id/comments/:commentId
-// Hapus komentar (manager atau pemilik)
-// ======================
+// Hapus komentar 
 async function remove(req, res, next) {
   try {
     const result = await commentService.deleteComment(req.params.commentId, req.user);

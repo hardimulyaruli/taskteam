@@ -7,9 +7,7 @@ import ExportPDF from '../components/ExportPDF';
 import { useTasks } from '../../../context/TaskContext';
 import '../../../styles/Dashboard.css';
 
-// ============================================
 // DONUT CHART — disesuaikan dengan TeamDashboard
-// ============================================
 const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
   const canvasRef = useRef(null);
   const total = selesai + dikerjakan + todo + terlewat;
@@ -83,9 +81,7 @@ const DonutChart = ({ selesai, dikerjakan, todo, terlewat }) => {
   );
 };
 
-// ============================================
-// PROGRESS BAR — pakai tt- class biar konsisten
-// ============================================
+// PROGRESS BAR 
 const ProgressBar = ({ label, value, total, color }) => {
   const pct = total > 0 ? Math.round((value / total) * 100) : 0;
   return (
@@ -107,9 +103,7 @@ const ProgressBar = ({ label, value, total, color }) => {
   );
 };
 
-// ============================================
 // WEEKLY BAR CHART — disesuaikan dengan TeamDashboard
-// ============================================
 const WeeklyChart = ({ tasks }) => {
   const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
   const counts = Array(7).fill(0);
@@ -148,9 +142,7 @@ const WeeklyChart = ({ tasks }) => {
   );
 };
 
-// ============================================
 // MAIN COMPONENT
-// ============================================
 const ManagerDashboard = ({ user }) => {
   const { tasks, users } = useTasks();
   const today = new Date();
